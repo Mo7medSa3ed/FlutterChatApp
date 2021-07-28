@@ -10,13 +10,13 @@ class TextMessage extends StatelessWidget {
   }) : super(key: key);
 
   final ChatMessage? message;
+  // color: Theme.of(context).brightness == Brightness.dark
+  //     ? Colors.white
+  //     : Colors.black,
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Theme.of(context).brightness == Brightness.dark
-      //     ? Colors.white
-      //     : Colors.black,
       padding: EdgeInsets.symmetric(
         horizontal: kDefaultPadding * 0.75,
         vertical: kDefaultPadding / 2,
@@ -26,7 +26,7 @@ class TextMessage extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Text(
-        message!.text,
+        message!.text ?? '',
         style: TextStyle(
           color: message!.isSender
               ? Colors.white

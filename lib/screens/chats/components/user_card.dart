@@ -1,18 +1,19 @@
 import 'package:chat/models/Chat.dart';
+import 'package:chat/models/User.dart';
 import 'package:chat/models/room.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
 
-class ChatCard extends StatelessWidget {
-  const ChatCard({
+class UserCard extends StatelessWidget {
+  const UserCard({
     Key? key,
-    required this.chat,
+    required this.user,
     required this.press,
   }) : super(key: key);
 
-  final Room chat;
-  final VoidCallback press;
+  final User user;
+  final  press;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class ChatCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(chat.reciverId!.img ?? img),
+                  backgroundImage: NetworkImage(user.img ?? img),
                 ),
                 if (true)
                   Positioned(
@@ -55,7 +56,7 @@ class ChatCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      chat.reciverId!.name ?? '',
+                      user.name ?? '',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
@@ -63,7 +64,7 @@ class ChatCard extends StatelessWidget {
                     Opacity(
                       opacity: 0.6,
                       child: Text(
-                        chat.lastMessage!.text ?? '',
+                        user.phone ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

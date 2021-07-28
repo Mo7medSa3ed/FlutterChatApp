@@ -1,5 +1,9 @@
 import 'package:chat/constants.dart';
+import 'package:chat/provider/app_provider.dart';
+import 'package:chat/screens/chats/components/peobleBody.dart';
+import 'package:chat/screens/profile/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'components/body.dart';
 
@@ -9,20 +13,26 @@ class ChatsScreen extends StatefulWidget {
 }
 
 class _ChatsScreenState extends State<ChatsScreen> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: Body(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: kPrimaryColor,
-        child: Icon(
-          Icons.person_add_alt_1,
-          color: Colors.white,
-        ),
-      ),
+      body: [Body(), PeopleBody(), ProfileScrean()][_selectedIndex],
+      floatingActionButton: _selectedIndex == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  _selectedIndex = 1;
+                });
+              },
+              backgroundColor: kPrimaryColor,
+              child: Icon(
+                Icons.person_add_alt_1,
+                color: Colors.white,
+              ),
+            )
+          : null,
       bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
@@ -39,11 +49,12 @@ class _ChatsScreenState extends State<ChatsScreen> {
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.messenger), label: "Chats"),
         BottomNavigationBarItem(icon: Icon(Icons.people), label: "People"),
-       // BottomNavigationBarItem(icon: Icon(Icons.call), label: "Calls"),
         BottomNavigationBarItem(
           icon: CircleAvatar(
             radius: 14,
-            backgroundImage: AssetImage("assets/images/user_2.png"),
+            backgroundImage: NetworkImage(
+                Provider.of<AppProvider>(context, listen: false).user!.img ??
+                    img),
           ),
           label: "Profile",
         ),
@@ -55,13 +66,21 @@ class _ChatsScreenState extends State<ChatsScreen> {
     return AppBar(
       backgroundColor: kPrimaryColor,
       automaticallyImplyLeading: false,
-      title: Text("Chats"),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search),
-          onPressed: () {},
-        ),
-      ],
+      title: Text("Chat App"),
+      actions: _selectedIndex == 0
+          ? [
+              IconButton(
+                icon: Icon(
+                    Provider.of<AppProvider>(context, listen: true).search
+                        ? Icons.close
+                        : Icons.search),
+                onPressed: () {
+                  Provider.of<AppProvider>(context, listen: false)
+                      .changeSearch();
+                },
+              ),
+            ]
+          : null,
     );
   }
 }

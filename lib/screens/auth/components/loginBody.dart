@@ -1,5 +1,8 @@
+import 'package:chat/api.dart';
 import 'package:chat/components/primary_button.dart';
 import 'package:chat/constants.dart';
+import 'package:chat/models/User.dart';
+import 'package:chat/screens/auth/Signup.dart';
 import 'package:chat/screens/auth/components/primaryField.dart';
 import 'package:flutter/material.dart';
 
@@ -19,84 +22,90 @@ class _LoginBodyState extends State<LoginBody> {
     return SafeArea(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: kDefaultPadding * 2),
-        child: Column(
-          children: [
-            Spacer(
-              flex: 2,
-            ),
-            Image.asset(
-              !isDark
-                  ? "assets/images/Logo_light.png"
-                  : "assets/images/Logo_dark.png",
-              height: 146,
-              width: double.infinity,
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            Text(
-              "Sign in",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.bodyText1!.color!),
-            ),
-            SizedBox(
-              height: kDefaultPadding * 3,
-            ),
-            PrimaryField(
-              hint: 'Phone',
-              controller: phoneController,
-            ),
-            SizedBox(
-              height: kDefaultPadding,
-            ),
-            PrimaryField(
-              hint: 'Password',
-              controller: passController,
-            ),
-            SizedBox(
-              height: kDefaultPadding * 2,
-            ),
-            PrimaryButton(
-              text: "Sign In",
-              press: () {},
-            ),
-            SizedBox(
-              height: kDefaultPadding,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don\'t Have An account ?",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).textTheme.bodyText1!.color!),
-                ),
-                SizedBox(
-                  width: kDefaultPadding / 2,
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Text(
-                    "Sign up",
+        child: Center(
+          child: ListView(
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            children: [
+              Image.asset(
+                !isDark
+                    ? "assets/images/Logo_light.png"
+                    : "assets/images/Logo_dark.png",
+                height: 146,
+                width: double.infinity,
+              ),
+              SizedBox(
+                height: kDefaultPadding * 3,
+              ),
+              Text(
+                "Sign in",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).textTheme.bodyText1!.color!),
+              ),
+              SizedBox(
+                height: kDefaultPadding * 3,
+              ),
+              PrimaryField(
+                hint: 'Phone',
+                controller: phoneController,
+              ),
+              SizedBox(
+                height: kDefaultPadding,
+              ),
+              PrimaryField(
+                hint: 'Password',
+                controller: passController,
+              ),
+              SizedBox(
+                height: kDefaultPadding * 2,
+              ),
+              PrimaryButton(
+                text: "Sign In",
+                press: () async {
+                  final user = User(
+                      phone: phoneController.text.trim(),
+                      password: passController.text.trim());
+                  API(context).loginUser(user.toJson());
+                },
+              ),
+              SizedBox(
+                height: kDefaultPadding,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don\'t Have An account ?",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).primaryColor),
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).textTheme.bodyText1!.color!),
                   ),
-                ),
-              ],
-            ),
-            Spacer(
-              flex: 2,
-            ),
-          ],
+                  SizedBox(
+                    width: kDefaultPadding / 2,
+                  ),
+                  GestureDetector(
+                    onTap: () => goTo(context, Signupcreen()),
+                    child: Text(
+                      "Sign up",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: kDefaultPadding * 3,
+              ),
+            ],
+          ),
         ),
       ),
     );

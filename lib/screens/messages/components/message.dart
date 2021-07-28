@@ -34,6 +34,7 @@ class Message extends StatelessWidget {
       child: Row(
         mainAxisAlignment:
             message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (!message.isSender) ...[
             CircleAvatar(
@@ -42,7 +43,7 @@ class Message extends StatelessWidget {
             ),
             SizedBox(width: kDefaultPadding / 2),
           ],
-          messageContaint(message),
+          Flexible(child: messageContaint(message)),
           if (message.isSender) MessageStatusDot(status: message.messageStatus)
         ],
       ),

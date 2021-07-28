@@ -1,5 +1,6 @@
 import 'package:chat/components/primary_button.dart';
 import 'package:chat/constants.dart';
+import 'package:chat/screens/auth/Signup.dart';
 import 'package:chat/screens/auth/login.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +15,9 @@ class SigninOrSignupScreen extends StatelessWidget {
             children: [
               Spacer(flex: 2),
               Image.asset(
-                        Theme.of(context).brightness == Brightness.light
-                  ? "assets/images/Logo_light.png"
-                  : "assets/images/Logo_dark.png",
+                Theme.of(context).brightness == Brightness.light
+                    ? "assets/images/Logo_light.png"
+                    : "assets/images/Logo_dark.png",
                 height: 146,
               ),
               Spacer(),
@@ -33,7 +34,7 @@ class SigninOrSignupScreen extends StatelessWidget {
               PrimaryButton(
                 color: Theme.of(context).colorScheme.secondary,
                 text: "Sign Up",
-                press: () {},
+                press: () => goTo(context, Signupcreen()),
               ),
               Spacer(flex: 2),
             ],

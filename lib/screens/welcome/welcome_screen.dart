@@ -35,12 +35,14 @@ class WelcomeScreen extends StatelessWidget {
             Spacer(flex: 3),
             FittedBox(
               child: TextButton(
-                  onPressed: () => Navigator.push(
+                  onPressed: () {
+                    setBoolValue('first', false);
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => SigninOrSignupScreen(),
-                        ),
-                      ),
+                        ));
+                  },
                   child: Row(
                     children: [
                       Text(
@@ -66,7 +68,7 @@ class WelcomeScreen extends StatelessWidget {
                     ],
                   )),
             ),
-                   Spacer(flex: 1),
+            Spacer(flex: 1),
           ],
         ),
       ),
