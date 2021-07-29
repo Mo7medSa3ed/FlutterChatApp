@@ -78,6 +78,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                     SizedBox(width: kDefaultPadding),
                     Expanded(
                       child: TextField(
+                        autofocus: true,
                         controller: textController,
                         decoration: InputDecoration(
                           hintText: "Type message",

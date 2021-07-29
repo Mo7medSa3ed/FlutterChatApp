@@ -3,7 +3,6 @@ import 'package:chat/Alert.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/models/ChatMessage.dart';
 import 'package:chat/models/User.dart';
-import 'package:chat/models/message.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:chat/screens/chats/chats_screen.dart';
@@ -211,7 +210,7 @@ class API {
       if ([200, 201].contains(res.statusCode)) {
         List<ChatMessage> data = res.data
             .map<ChatMessage>(
-                (e) => ChatMessage.fromJson(e, e['senderTo'] != uid))
+                (e) => ChatMessage.fromJson(e, e['senderTo'] == uid))
             .toList();
         Provider.of<AppProvider>(context, listen: false).initChatList(data);
       } else {
@@ -231,7 +230,7 @@ class API {
           data: msg, options: Options(responseType: ResponseType.json));
       if ([200, 201].contains(res.statusCode)) {
         ChatMessage data =
-            ChatMessage.fromJson(res.data, res.data['senderTo'] != uid);
+            ChatMessage.fromJson(res.data, res.data['senderTo'] == uid);
 
         Provider.of<AppProvider>(context, listen: false).addMsgTochat(data);
         return true;
