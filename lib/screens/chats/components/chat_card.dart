@@ -1,11 +1,12 @@
-import 'package:chat/models/Chat.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/provider/app_provider.dart' as app;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants.dart';
 
 class ChatCard extends StatelessWidget {
-  const ChatCard({
+  ChatCard({
     Key? key,
     required this.chat,
     required this.press,
@@ -13,9 +14,19 @@ class ChatCard extends StatelessWidget {
 
   final Room chat;
   final VoidCallback press;
+  var reciever;
+  var uid;
 
   @override
   Widget build(BuildContext context) {
+    uid = Provider.of<app.AppProvider>(context, listen: false).user!.id;
+
+    if (chat.reciverId!.id == uid) {
+      reciever = chat.userId;
+    } else {
+      reciever = chat.reciverId;
+    }
+
     return InkWell(
       onTap: press,
       child: Padding(
@@ -27,9 +38,9 @@ class ChatCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(chat.reciverId!.img ?? img),
+                  backgroundImage: NetworkImage(reciever.img ?? img),
                 ),
-                if (true)
+                if (reciever.online ?? false)
                   Positioned(
                     right: 0,
                     bottom: 0,
@@ -55,7 +66,7 @@ class ChatCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      chat.reciverId!.name ?? '',
+                      reciever.name ?? '',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
@@ -72,13 +83,37 @@ class ChatCard extends StatelessWidget {
                 ),
               ),
             ),
-            Opacity(
-                opacity: 0.64,
-                child: Text(DateTime.now()
-                        .difference(DateTime.parse('2021-07-26T19:52:05'))
-                        .inMinutes
-                        .toString() +
-                    ' min ')),
+            Column(
+              children: [
+                Opacity(
+                    opacity: 0.64,
+                    child: Text(DateTime.now()
+                                .difference(
+                                    DateTime.parse(chat.updatedAt.toString()))
+                                .inMinutes ==
+                            0
+                        ? ''
+                        : DateTime.now()
+                                .difference(
+                                    DateTime.parse(chat.updatedAt.toString()))
+                                .inMinutes
+                                .toString() +
+                            ' min ')),
+                SizedBox(height: chat.msgCount == 0 ? 0 : 5),
+                chat.msgCount == 0
+                    ? Container()
+                    : Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: kPrimaryColor),
+                        child: Text(
+                          chat.msgCount! > 99
+                              ? '+99'
+                              : chat.msgCount.toString(),
+                          style: TextStyle(color: Colors.white),
+                        )),
+              ],
+            ),
           ],
         ),
       ),

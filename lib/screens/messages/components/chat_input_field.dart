@@ -1,15 +1,16 @@
 import 'package:chat/api.dart';
+import 'package:chat/provider/app_provider.dart';
+import 'package:chat/socket.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants.dart';
 
 class ChatInputField extends StatefulWidget {
-  final roomId;
   final senderToId;
   ChatInputField({
     Key? key,
-    this.roomId,
     this.senderToId,
   }) : super(key: key);
 
@@ -84,6 +85,20 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           hintText: "Type message",
                           border: InputBorder.none,
                         ),
+                        onChanged: (String v) {
+                          if (v.length == 1|| v.length==0 ) {
+                            final chatList =
+                                Provider.of<AppProvider>(context, listen: false)
+                                    .chatList;
+                            if (chatList.length > 0) {
+                              Socket().emitChangeStatus({
+                                'roomId': chatList[0].roomId,
+                                'reciever': "${widget.senderToId}",
+                                'status': v.length==0?null: 'typing...'
+                              });
+                            }
+                          }
+                        },
                       ),
                     ),
                     // Icon(
@@ -119,13 +134,25 @@ class _ChatInputFieldState extends State<ChatInputField> {
                       backgroundColor: kPrimaryColor,
                       onPressed: () async {
                         if (textController.text.isNotEmpty) {
+                          final chatList =
+                              Provider.of<AppProvider>(context, listen: false)
+                                  .chatList;
+                          final rid =
+                              chatList.length > 0 ? chatList[0].roomId : null;
                           final data = {
-                            "roomId": "${widget.roomId}",
+                            "roomId": rid,
                             "senderTo": "${widget.senderToId}",
                             "text": textController.text.trim()
                           };
                           final finish = await API(context).sendMsg(data);
-                          if (finish) textController.clear();
+                          if (finish) {
+                            textController.clear();
+                            Socket().emitChangeStatus({
+                              'roomId': chatList[0].roomId,
+                              'reciever': "${widget.senderToId}",
+                              'status': null
+                            });
+                          }
                         }
                       },
                       child: Icon(

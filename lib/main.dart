@@ -1,7 +1,7 @@
-import 'dart:convert';
-
+import 'package:chat/Alert.dart';
 import 'package:chat/models/ChatMessage.dart';
 import 'package:chat/models/User.dart';
+import 'package:chat/models/room.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:chat/screens/welcome/splashScrean.dart';
 import 'package:chat/socket.dart';
@@ -28,15 +28,30 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
     Socket().socket.on('ChangeUserStatus', (data) {
-      Provider.of<AppProvider>(context, listen: false)
-          .initUser(User.fromJson(data));
+      print(data);
+      final pro = Provider.of<AppProvider>(context, listen: false);
+      pro.initUser(User.fromJson(data));
+      pro.changeUserStatusForRoom(User.fromJson(data));
     });
-    Socket().socket.on('NewMessage', (msg) {
-      final uid = Provider.of<AppProvider>(context, listen: false).user!.id;
-      final isSender = msg['senderTo'] != uid;
+
+    Socket().socket.on('changeStatusForUser', (data) {
+      final pro = Provider.of<AppProvider>(context, listen: false);
+      pro.changeUserStatus(data);
+    });
+
+    Socket().socket.on('NewMessage', (data) {
+      final msg = data['message'];
+      final provider = Provider.of<AppProvider>(context, listen: false);
+      final uid = provider.user!.id;
+      final isSender = msg['senderTo'] == uid;
+
       if (isSender) {
-        ChatMessage data = ChatMessage.fromJson(msg, isSender);
-        Provider.of<AppProvider>(context, listen: false).addMsgTochat(data);
+        if (data['room'] != null) {
+          provider
+              .addRoom(Room.fromJson(data['room'], msgs: false, lastMsg: msg));
+        }
+        ChatMessage newMsg = ChatMessage.fromJson(msg, !isSender);
+        provider.addMsgTochat(newMsg);
       }
     });
     super.initState();
@@ -66,8 +81,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       if (state == AppLifecycleState.resumed) {
         if (!Socket().socket.connected) {
           Socket().socket.connect();
-          Socket().emitOnline(user.id);
         }
+        Socket().emitOnline(user.id);
       }
     }
   }

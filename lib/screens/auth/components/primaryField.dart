@@ -15,8 +15,7 @@ class _PrimaryFieldState extends State<PrimaryField> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: kDefaultPadding * 2, vertical: kDefaultPadding / 3),
+      padding: EdgeInsets.symmetric(horizontal: kDefaultPadding * 2),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(kDefaultPadding * 2),
           color: kContentColorDarkTheme.withOpacity(isDark ? 0.1 : 1)),
@@ -47,7 +46,7 @@ class _PrimaryFieldState extends State<PrimaryField> {
         obscureText:
             widget.hint.toString().toLowerCase() == 'password' ? true : false,
         maxLength: widget.hint.toString().toLowerCase() == 'phone' ? 11 : null,
-        keyboardType: widget.hint.toString().toLowerCase() == 'password'
+        keyboardType: widget.hint.toString().toLowerCase() == 'phone'
             ? TextInputType.phone
             : TextInputType.text,
         decoration: InputDecoration(

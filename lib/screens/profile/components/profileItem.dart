@@ -14,9 +14,9 @@ class ProfileItem extends StatelessWidget {
         children: [
           Text(
             '$title',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
             style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context)
                     .textTheme
@@ -24,13 +24,16 @@ class ProfileItem extends StatelessWidget {
                     .color!
                     .withOpacity(0.6)),
           ),
-          Text(
-            "$value",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                color: Theme.of(context).textTheme.bodyText1!.color!),
+          Expanded(
+            child: Text(
+              "$value",
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                  color: Theme.of(context).textTheme.bodyText1!.color!),
+            ),
           ),
         ],
       ),

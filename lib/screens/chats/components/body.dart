@@ -17,105 +17,148 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   List<Room>? chats;
   List<Room>? filteredChats = [];
-
+  bool pressed = true;
+  var uid;
   @override
   void initState() {
+    uid = Provider.of<AppProvider>(context, listen: false).user!.id;
     getRoom();
     super.initState();
   }
 
   getRoom() async {
-    final id = Provider.of<AppProvider>(context, listen: false).user?.id;
-    chats = await API(context).getAllChats(id);
-    filteredChats = chats;
-    setState(() {});
+    final provider = Provider.of<AppProvider>(context, listen: false);
+    if (provider.roomList == null) {
+      final id = provider.user?.id;
+      filteredChats = await API(context).getAllChats(id);
+      setState(() {});
+    } else {
+      filteredChats = provider.roomList;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     var search = context.select<AppProvider, bool>((value) => value.search);
 
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.fromLTRB(
-              kDefaultPadding, 0, kDefaultPadding, kDefaultPadding),
-          color: kPrimaryColor,
-          child: !search
-              ? Row(
-                  children: [
-                    FillOutlineButton(press: () {}, text: "Recent Message"),
-                    SizedBox(width: kDefaultPadding),
-                    FillOutlineButton(
-                      press: () {},
-                      text: "Active",
-                      isFilled: false,
-                    ),
-                  ],
-                )
-              : Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: kDefaultPadding * 1.5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Theme.of(context)
-                          .scaffoldBackgroundColor
-                          .withOpacity(0.5)),
-                  child: TextField(
-                    maxLength: 20,
-                    onChanged: (String val) {
-                      if (val.length > 0) {
-                        var filtered = chats!
-                            .where((e) =>
-                                e.reciverId!.name!
-                                    .toLowerCase()
-                                    .contains(val.trim().toLowerCase()) ||
-                                e.reciverId!.phone!
-                                    .toLowerCase()
-                                    .contains(val.trim().toLowerCase()))
-                            .toList();
+    return Consumer<AppProvider>(builder: (ctx, pro, w) {
+      chats = pro.roomList;
 
-                        filteredChats = filtered;
-                      } else {
-                        filteredChats = chats;
-                      }
-                      setState(() {});
-                    },
-                    cursorColor: Theme.of(context).textTheme.bodyText1!.color!,
-                    maxLines: 1,
-                    decoration: InputDecoration(
-                      counterText: '',
-                      hintText: "Search here...",
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-        ),
-        Expanded(
-          child: chats != null
-              ? ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: filteredChats?.length,
-                  itemBuilder: (context, index) => ChatCard(
-                    chat: filteredChats![index],
-                    press: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MessagesScreen(
-                          filteredChats![index].reciverId,
-                          filteredChats![index].id,
-                        ),
+      return Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(
+                kDefaultPadding, 0, kDefaultPadding, kDefaultPadding),
+            color: kPrimaryColor,
+            child: !search
+                ? Row(
+                    children: [
+                      FillOutlineButton(
+                          isFilled: pressed,
+                          press: () {
+                            filteredChats = chats;
+                            pressed = true;
+                            setState(() {});
+                          },
+                          text: "Recent Message"),
+                      SizedBox(width: kDefaultPadding),
+                      FillOutlineButton(
+                        isFilled: !pressed,
+                        press: () {
+                          var filtered = chats!
+                              .where((e) =>
+                                  e.reciverId!.online! || e.userId!.online!)
+                              .toList();
+
+                          filteredChats = filtered;
+                          pressed = false;
+                          setState(() {});
+                        },
+                        text: "Active",
+                      ),
+                    ],
+                  )
+                : Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: kDefaultPadding * 1.5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Theme.of(ctx)
+                            .scaffoldBackgroundColor
+                            .withOpacity(0.5)),
+                    child: TextField(
+                      maxLength: 20,
+                      onChanged: (String val) {
+                        if (val.length > 0) {
+                          var filtered = chats!
+                              .where((e) =>
+                                  e.reciverId!.name!
+                                      .toLowerCase()
+                                      .contains(val.trim().toLowerCase()) ||
+                                  e.reciverId!.phone!
+                                      .toLowerCase()
+                                      .contains(val.trim().toLowerCase()))
+                              .toList();
+
+                          filteredChats = filtered;
+                        } else {
+                          filteredChats = chats;
+                        }
+                        setState(() {});
+                      },
+                      cursorColor: Theme.of(ctx).textTheme.bodyText1!.color!,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                        counterText: '',
+                        hintText: "Search here...",
+                        border: InputBorder.none,
                       ),
                     ),
                   ),
-                )
-              : Center(
-                  child: CircularProgressIndicator(
-                    color: kPrimaryColor,
-                  ),
-                ),
-        ),
-      ],
-    );
+          ),
+          Expanded(
+              child: (chats != null && chats!.length > 0)
+                  ? ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: filteredChats?.length,
+                      itemBuilder: (ctx, index) {
+                        var reciever;
+                        if (filteredChats![index].reciverId!.id == uid) {
+                          reciever = filteredChats![index].userId;
+                        } else {
+                          reciever = filteredChats![index].reciverId;
+                        }
+                        return ChatCard(
+                          chat: filteredChats![index],
+                          press: () => Navigator.push(
+                            ctx,
+                            MaterialPageRoute(
+                              builder: (ctx) => MessagesScreen(
+                                reciever,
+                                filteredChats![index].id,
+                              ),
+                            ),
+                          ),
+                        );
+                      })
+                  : (chats == null)
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            color: kPrimaryColor,
+                          ),
+                        )
+                      : Center(
+                          child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kDefaultPadding * 3),
+                          child: Text(
+                            "Hi you don't have any chats search for firends to chat with them.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18, letterSpacing: 2),
+                          ),
+                        ))),
+        ],
+      );
+    });
   }
 }

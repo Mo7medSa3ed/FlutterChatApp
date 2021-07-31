@@ -10,7 +10,10 @@ import 'message.dart';
 class Body extends StatefulWidget {
   final roomId;
   final senderToId;
-  Body(this.roomId, this.senderToId,);
+  Body(
+    this.roomId,
+    this.senderToId,
+  );
   @override
   _BodyState createState() => _BodyState();
 }
@@ -24,6 +27,7 @@ class _BodyState extends State<Body> {
   }
 
   getMessages() async {
+   
     await API(context).getAllMessages(widget.roomId);
   }
 
@@ -49,7 +53,6 @@ class _BodyState extends State<Body> {
             height: kDefaultPadding / 2,
           ),
           ChatInputField(
-            roomId: widget.roomId,
             senderToId: widget.senderToId,
           ),
         ],

@@ -1,6 +1,4 @@
-import 'package:chat/models/Chat.dart';
 import 'package:chat/models/User.dart';
-import 'package:chat/models/room.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
@@ -30,7 +28,7 @@ class UserCard extends StatelessWidget {
                   radius: 24,
                   backgroundImage: NetworkImage(user.img ?? img),
                 ),
-                if (true)
+                if (user.online??false)
                   Positioned(
                     right: 0,
                     bottom: 0,

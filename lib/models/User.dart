@@ -7,6 +7,7 @@ class User {
   String? createdAt;
   String? updatedAt;
   String? lastSeen;
+  bool? online =false;
 
   User(
       {this.img,
@@ -16,6 +17,7 @@ class User {
       this.updatedAt,
       this.password,
       this.lastSeen,
+      this.online,
       this.phone});
 
   factory User.fromJson(json) => User(
@@ -24,6 +26,7 @@ class User {
         phone: json['phone'],
         password: json['password'],
         img: json['img'],
+        online: json['online'],
         createdAt: json['createdAt'],
         lastSeen: json['lastSeen'],
         updatedAt: json['updatedAt'],

@@ -70,7 +70,7 @@ class ProfileScrean extends StatelessWidget {
                     children: [
                       Spacer(),
                       Container(
-                          width: MediaQuery.of(context).size.width * 0.3,
+                          width: MediaQuery.of(context).size.width * 0.35,
                           child: PrimaryButton(
                               text: 'Edit Profile',
                               press: () => goTo(context, EditProfileScrean()))),

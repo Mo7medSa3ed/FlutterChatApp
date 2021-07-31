@@ -24,7 +24,6 @@ class _PeopleBodyState extends State<PeopleBody> {
   search(query) async {
     users = await API(context).searchPeople(query);
     isFirst = false;
-    setState(() {});
   }
 
   @override
@@ -45,7 +44,7 @@ class _PeopleBodyState extends State<PeopleBody> {
               controller: searchControoler,
               maxLength: 20,
               onChanged: (String val) async {
-                if (val.length > 0) {
+                if (val.trim().length > 0) {
                   await search(val.trim().toLowerCase());
                 } else {
                   users = [];
@@ -74,7 +73,7 @@ class _PeopleBodyState extends State<PeopleBody> {
                       final provider =
                           Provider.of<ap.AppProvider>(context, listen: false);
                       var rid;
-                      provider.roomList.forEach((e) {
+                      (provider.roomList ?? []).forEach((e) {
                         if (e.reciverId!.id == users![index].id) {
                           rid = e.id;
                           return;

@@ -6,10 +6,12 @@ class Room {
   bool? isOpen;
   String? id;
   User? reciverId;
-  String? userId;
+  User? userId;
   String? createdAt;
   String? updatedAt;
   Message? lastMessage;
+  int? msgCount = 0;
+  String? recieverStatus;
 
   Room(
       {this.createdAt,
@@ -17,20 +19,25 @@ class Room {
       this.isOpen,
       this.lastMessage,
       this.messages,
+      this.msgCount,
       this.reciverId,
       this.updatedAt,
       this.userId});
 
-  factory Room.fromJson(json) => Room(
-        messages: List.from(
-            json['messages'].map<Message>((e) => Message.fromJson(e)).toList()),
+  factory Room.fromJson(json, {msgs = true, lastMsg}) => Room(
+        msgCount: json['messages'].length,
+        messages: (json['messages'].length > 0 && msgs)
+            ? List.from(json['messages']
+                .map<Message>((e) => Message.fromJson(e))
+                .toList())
+            : [],
         isOpen: json['isOpen'],
         id: json['_id'],
         reciverId: User.fromJson(json['reciverId']),
-        userId: json['userId'],
+        userId: User.fromJson(json['userId']),
         createdAt: json['createdAt'],
         updatedAt: json['updatedAt'],
-        lastMessage: Message.fromJson(json['lastMessage']),
+        lastMessage: Message.fromJson(msgs ? json['lastMessage'] : lastMsg),
       );
 
   // Map<String, dynamic> toJson() => {
