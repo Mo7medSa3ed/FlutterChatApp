@@ -27,12 +27,12 @@ class _BodyState extends State<Body> {
   }
 
   getMessages() async {
-   
     await API(context).getAllMessages(widget.roomId);
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.senderToId);
     var messageList = Provider.of<AppProvider>(context).getChatList();
     return Container(
       child: Column(

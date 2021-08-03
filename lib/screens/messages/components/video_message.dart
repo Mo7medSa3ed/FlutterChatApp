@@ -1,37 +1,38 @@
+import 'package:chat/models/ChatMessage.dart';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
-import '../../../constants.dart';
+class VideoMessage extends StatefulWidget {
+  final ChatMessage? message;
+  VideoMessage({this.message});
+  @override
+  _VideoMessageState createState() => _VideoMessageState();
+}
 
-class VideoMessage extends StatelessWidget {
+class _VideoMessageState extends State<VideoMessage> {
+  final link =
+      'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4';
+
+  FlickManager? flickManager;
+  @override
+  void initState() {
+    super.initState();
+    flickManager = FlickManager(
+      autoPlay: false,
+      autoInitialize: true,
+      videoPlayerController: VideoPlayerController.network(link),
+    );
+  }
+
+  @override
+  void dispose() {
+    flickManager!.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.45, // 45% of total width
-      child: AspectRatio(
-        aspectRatio: 1.6,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset("assets/images/Video Place Here.png"),
-            ),
-            Container(
-              height: 25,
-              width: 25,
-              decoration: BoxDecoration(
-                color: kPrimaryColor,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.play_arrow,
-                size: 16,
-                color: Colors.white,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+    return FlickVideoPlayer(flickManager: flickManager!);
   }
 }

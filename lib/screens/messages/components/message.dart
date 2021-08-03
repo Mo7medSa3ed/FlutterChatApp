@@ -1,4 +1,6 @@
 import 'package:chat/models/ChatMessage.dart';
+import 'package:chat/screens/messages/components/document_message.dart';
+import 'package:chat/screens/messages/components/image_message.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
@@ -22,8 +24,14 @@ class Message extends StatelessWidget {
           return TextMessage(message: message);
         case ChatMessageType.audio:
           return AudioMessage(message: message);
+        case ChatMessageType.record:
+          return DocumentMessage(message: message);
         case ChatMessageType.video:
-          return VideoMessage();
+          return VideoMessage(message: message);
+        case ChatMessageType.document:
+          return DocumentMessage(message: message);
+        case ChatMessageType.image:
+          return ImageMessage(message: message);
         default:
           return SizedBox();
       }

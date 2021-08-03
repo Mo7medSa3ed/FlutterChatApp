@@ -1,4 +1,3 @@
-import 'package:chat/Alert.dart';
 import 'package:chat/models/ChatMessage.dart';
 import 'package:chat/models/User.dart';
 import 'package:chat/models/room.dart';
@@ -9,7 +8,7 @@ import 'package:chat/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   if (!Socket().socket.connected) {
     Socket().socket.connect();
   }
@@ -18,7 +17,6 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -28,7 +26,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
     Socket().socket.on('ChangeUserStatus', (data) {
-      print(data);
       final pro = Provider.of<AppProvider>(context, listen: false);
       pro.initUser(User.fromJson(data));
       pro.changeUserStatusForRoom(User.fromJson(data));

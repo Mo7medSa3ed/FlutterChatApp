@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 class API {
   API(this.context);
   final context;
-  final baseURL = 'http://192.168.1.12:3000';
+  final baseURL = 'http://10.0.2.2:3000';
 
   // login User
 
@@ -223,7 +223,6 @@ class API {
   Future<dynamic>? searchPeople(query) async {
     try {
       final uid = Provider.of<AppProvider>(context, listen: false).user!.id;
-      FocusScope.of(context).requestFocus(new FocusNode());
 
       final dio = new Dio();
       final res = await dio.get('$baseURL/users/search/$query',
@@ -267,9 +266,11 @@ class API {
     final uid = Provider.of<AppProvider>(context, listen: false).user!.id;
     try {
       final dio = new Dio();
+      print(msg);
 
       final res = await dio.post('$baseURL/messages/$uid',
           data: msg, options: Options(responseType: ResponseType.json));
+
       if ([200, 201].contains(res.statusCode)) {
         ChatMessage data = ChatMessage.fromJson(res.data, true);
         Provider.of<AppProvider>(context, listen: false).addMsgTochat(data);

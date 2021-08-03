@@ -64,14 +64,18 @@ class MessagesScreen extends StatelessWidget {
                 chatUser.name ?? '',
                 style: TextStyle(fontSize: 16),
               ),
-              chatUser.online
+              !chatUser.online
                   ? Consumer<AppProvider>(
                       builder: (ctx, app, w) => Text(
-                           app.roomList![0].recieverStatus??'' ,
+                            app.roomList!.length > 0
+                                ? app.roomList![idx].recieverStatus != null
+                                    ? app.roomList![idx].recieverStatus!
+                                    : "online"
+                                : "",
                             style: TextStyle(fontSize: 12),
                           ))
                   : Text(
-                      "Last seen ${chatUser.lastSeen}",
+                      "Last seen ${dateTimeFormat(chatUser.lastSeen)} ",
                       style: TextStyle(fontSize: 12),
                     )
             ],

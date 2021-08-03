@@ -1,4 +1,4 @@
-enum ChatMessageType { text, audio, image, video }
+enum ChatMessageType { text, audio, image, video, document, record }
 enum MessageStatus { not_sent, not_view, viewed }
 
 class ChatMessage {
@@ -10,6 +10,7 @@ class ChatMessage {
   String? roomId;
   String? senderTo;
   String? createdAt;
+  String? attachLink;
 
   ChatMessage({
     this.createdAt,
@@ -17,6 +18,7 @@ class ChatMessage {
     this.roomId,
     this.senderTo,
     this.text = '',
+    this.attachLink,
     this.messageType,
     this.messageStatus,
     this.isSender = false,
@@ -28,10 +30,30 @@ class ChatMessage {
       roomId: json['roomId'],
       senderTo: json['senderTo'],
       createdAt: json['ceatedAt'],
-      messageType: ChatMessageType.text,
+      attachLink: json['attachLink'],
+      messageType: msgTypeReturn(json['type']),
       messageStatus: MessageStatus.viewed,
       isSender: sender);
 }
+
+msgTypeReturn(type) {
+  if (type == 'text') {
+    return ChatMessageType.text;
+  } else if (type == 'record') {
+    return ChatMessageType.record;
+  } else if (type == 'image') {
+    return ChatMessageType.image;
+  } else if (type == 'document') {
+    return ChatMessageType.document;
+  } else if (type == 'video') {
+    return ChatMessageType.video;
+  } else {
+    return ChatMessageType.audio;
+  }
+}  
+
+
+
 
 // List demeChatMessages = [
 //   ChatMessage(

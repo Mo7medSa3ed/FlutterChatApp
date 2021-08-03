@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../constants.dart';
 
 class ChatCard extends StatelessWidget {
-  ChatCard({
+   ChatCard({
     Key? key,
     required this.chat,
     required this.press,
@@ -87,18 +87,8 @@ class ChatCard extends StatelessWidget {
               children: [
                 Opacity(
                     opacity: 0.64,
-                    child: Text(DateTime.now()
-                                .difference(
-                                    DateTime.parse(chat.updatedAt.toString()))
-                                .inMinutes ==
-                            0
-                        ? ''
-                        : DateTime.now()
-                                .difference(
-                                    DateTime.parse(chat.updatedAt.toString()))
-                                .inMinutes
-                                .toString() +
-                            ' min ')),
+                    child: Text(dateDiffrence(DateTime.now(),
+                        DateTime.parse(chat.updatedAt.toString())))),
                 SizedBox(height: chat.msgCount == 0 ? 0 : 5),
                 chat.msgCount == 0
                     ? Container()

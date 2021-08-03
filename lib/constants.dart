@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const kPrimaryColor = Color(0xFF00BF6D);
@@ -48,4 +49,24 @@ showLoading(context) {
       builder: (ctx) => Center(
             child: CircularProgressIndicator(),
           ));
+}
+
+dateDiffrence(DateTime first, DateTime second) {
+  final diff = DateTime.now().difference(second);
+  if (diff.inMinutes == 0) {
+    return 'JustNow';
+  } else if (diff.inMinutes < 60) {
+    return '${diff.inMinutes} min ago';
+  } else if (diff.inHours < 25) {
+    return '${diff.inHours} hours ago';
+  } else if (diff.inDays == 31) {
+    return '${diff.inDays} day ago';
+  } else {
+    return '';
+  }
+}
+
+dateTimeFormat(date) {
+  return DateFormat.yMEd().format(DateTime.parse(date)) +
+      DateFormat.Hm().format(DateTime.parse(date)).toString();
 }

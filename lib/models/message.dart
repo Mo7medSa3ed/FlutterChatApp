@@ -5,33 +5,45 @@ class Message {
   String? senderTo;
   String? createdAt;
   bool? isRead;
-  String? img;
+  String? attachLink;
+  String? type;
   String? updatedAt;
 
   Message(
-      {this.img,
+      {this.attachLink,
       this.id,
       this.isRead,
       this.createdAt,
       this.updatedAt,
+      this.type,
       this.roomId,
       this.senderTo,
       this.text});
 
   factory Message.fromJson(json) => Message(
         text: json['text'],
+        type: json['type'],
         id: json['_id'],
         roomId: json['roomId'],
         isRead: json['isRead'],
         senderTo: json['senderTo'],
-        img: json['img'],
+        attachLink: json['attachLink'],
         createdAt: json['ceatedAt'],
         updatedAt: json['updatedAt'],
       );
 
-  Map<String, dynamic> toJson() => {
-        'text': text,
-        'senderId': senderTo,
-        'roomId': roomId,
-      };
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {};
+    if (attachLink != null) {
+      map["attachLink"] = attachLink;
+    }
+    if (text != null) {
+      map['text'] = text ?? '';
+    }
+    map['senderTo'] = senderTo;
+    map['roomId'] = roomId;
+    map['type'] = type;
+
+    return map;
+  }
 }
