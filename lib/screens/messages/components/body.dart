@@ -20,7 +20,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  int page = 1;
+  int page = 0;
   final paginateScrollController = ScrollController();
   bool? isLast = false;
   @override
@@ -40,7 +40,7 @@ class _BodyState extends State<Body> {
 
   getMessages() async {
     if (widget.roomId != null && isLast == false)
-      isLast = await API(context).getAllMessages(widget.roomId, page);
+      isLast = await API(context).getAllMessages(widget.roomId, page + 1);
   }
 
   @override

@@ -75,11 +75,11 @@ class NotificationPlugin {
     var platformChannel =
         NotificationDetails(android: androidChannel, iOS: iosChannel);
 
-    await flutterLocalNotificationsPlugin!
-        .show(id, title, body, platformChannel, payload: payload+"$id");
+    await flutterLocalNotificationsPlugin!.show(
+        id, title, body, platformChannel,
+        payload: payload + id.toString());
   }
 }
-
 
 // Future<String> downloadAndSaveFile(String url) async {
 //   String fileName = url.split('/').last;

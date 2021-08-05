@@ -81,7 +81,7 @@ void onBackgroundFetch(String taskId) async {
           FlutterAppBadger.removeBadge();
         }
         await notificationPlugin.showNotification(
-            Random().nextDouble().toInt(),
+            Random().nextInt(10000),
             data['recieverName'],
             msg['text'] ?? msg['attachLink'],
             msg['roomId']);
