@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:background_fetch/background_fetch.dart';
-import 'package:chat/constants.dart';
 import 'package:chat/models/User.dart';
 import 'package:chat/notification.dart';
 import 'package:chat/socket.dart';

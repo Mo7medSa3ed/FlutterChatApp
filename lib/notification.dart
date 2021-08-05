@@ -76,9 +76,91 @@ class NotificationPlugin {
         NotificationDetails(android: androidChannel, iOS: iosChannel);
 
     await flutterLocalNotificationsPlugin!
-        .show(id, title, body, platformChannel, payload: payload);
+        .show(id, title, body, platformChannel, payload: payload+"$id");
   }
 }
+
+
+// Future<String> downloadAndSaveFile(String url) async {
+//   String fileName = url.split('/').last;
+
+//   final Directory directory = await getApplicationDocumentsDirectory();
+//   final String filePath = '${directory.path}/$fileName';
+//   final http.Response response = await http.get(Uri.parse(url));
+//   final File file = File(filePath);
+//   await file.writeAsBytes(response.bodyBytes);
+//   return filePath;
+// }
+
+// Future<void> showNotificationWithAttachment({
+//   @required int id,
+//   @required String title,
+//   @required String body,
+//   @required int chatId,
+//   @required String type,
+//   String image,
+// }) async {
+//   String bigPicturePath;
+//   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//       FlutterLocalNotificationsPlugin();
+//   if (image != null) bigPicturePath = await downloadAndSaveFile(image);
+//   const Person me = Person(
+//     name: 'Me',
+//     key: '1',
+//     // uri: 'tel:1234567890',
+//     icon: DrawableResourceAndroidIcon('me'),
+//   );
+//   final Person lunchBot = Person(
+//     name: title,
+//     key: type,
+//     // bot: true,
+//     icon: BitmapFilePathAndroidIcon(bigPicturePath),
+//   );
+//   final List<Message> messages = <Message>[
+//     Message(body, DateTime.now(), lunchBot),
+//   ];
+//   final MessagingStyleInformation messagingStyle = MessagingStyleInformation(me,
+//       groupConversation: true,
+//       conversationTitle: ' ',
+//       htmlFormatContent: true,
+//       htmlFormatTitle: true,
+//       messages: messages);
+
+//   final AndroidNotificationDetails androidPlatformChannelSpecifics =
+//       AndroidNotificationDetails(
+//     '$chatId',
+//     'your channel name',
+//     'your channel description',
+//     importance: Importance.max,
+//     priority: Priority.high,
+//     ticker: 'ticker',
+//     visibility: NotificationVisibility.private,
+//     styleInformation: messagingStyle,
+//   );
+
+//   final IOSNotificationDetails iOSPlatformChannelSpecifics =
+//       IOSNotificationDetails(
+//           threadIdentifier: 'notify-$chatId',
+//           attachments: <IOSNotificationAttachment>[
+//         if (bigPicturePath != null && bigPicturePath.isNotEmpty)
+//           IOSNotificationAttachment(bigPicturePath)
+//       ]);
+//   final MacOSNotificationDetails macOSPlatformChannelSpecifics =
+//       MacOSNotificationDetails(
+//           threadIdentifier: 'notify-$chatId',
+//           attachments: <MacOSNotificationAttachment>[
+//         if (bigPicturePath != null && bigPicturePath.isNotEmpty)
+//           MacOSNotificationAttachment(bigPicturePath)
+//       ]);
+
+//   final NotificationDetails notificationDetails = NotificationDetails(
+//       iOS: iOSPlatformChannelSpecifics,
+//       macOS: macOSPlatformChannelSpecifics,
+//       android: androidPlatformChannelSpecifics);
+
+//   flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails,
+//       payload: '$type-$chatId');
+// }
 
 NotificationPlugin notificationPlugin = NotificationPlugin._();
 
