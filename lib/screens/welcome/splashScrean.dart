@@ -6,6 +6,7 @@ import 'package:chat/models/User.dart';
 import 'package:chat/notification.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:chat/screens/chats/chats_screen.dart';
+import 'package:chat/screens/messages/message_screen.dart';
 import 'package:chat/screens/signinOrSignUp/signin_or_signup_screen.dart';
 import 'package:chat/screens/welcome/welcome_screen.dart';
 import 'package:chat/socket.dart';
@@ -26,6 +27,12 @@ class _SplashScreanState extends State<SplashScrean> {
     check();
 
     super.initState();
+  }
+
+  onNotificationInlowerVersions(ReceivedNotification receivedNotification) {}
+
+  Future onNotificationClick(String payload) async {
+    goTo(context, MessagesScreen(User(), payload));
   }
 
   getRoom() async {
@@ -51,6 +58,9 @@ class _SplashScreanState extends State<SplashScrean> {
           Provider.of<AppProvider>(context, listen: false).initUser(user);
           Socket().emitOnline(user.id);
           await getRoom();
+          notificationPlugin
+              .setListnerForLowerVersions(onNotificationInlowerVersions);
+          notificationPlugin.setOnNotificationClick(onNotificationClick);
           goToWithRemoveUntill(context, ChatsScreen());
         } else {
           goToWithRemoveUntill(context, SigninOrSignupScreen());

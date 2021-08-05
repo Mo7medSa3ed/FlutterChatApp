@@ -6,6 +6,7 @@ import 'package:chat/constants.dart';
 import 'package:chat/models/User.dart';
 import 'package:chat/notification.dart';
 import 'package:chat/socket.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> initPlatformState() async {
@@ -73,6 +74,13 @@ void onBackgroundFetch(String taskId) async {
           ? User.fromJson(jsonDecode(userGetter.toString()))
           : null;
       if (msg['senderTo'] == user!.id) {
+        var count = data['count'];
+        print(count);
+        if (count > 0) {
+          FlutterAppBadger.updateBadgeCount(count);
+        } else {
+          FlutterAppBadger.removeBadge();
+        }
         await notificationPlugin.showNotification(
             Random().nextDouble().toInt(),
             data['recieverName'],

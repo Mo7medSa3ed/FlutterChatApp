@@ -44,6 +44,7 @@ dependencies:
   delayed_display:  
   audioplayers: ^0.19.1
   background_fetch:
+  flutter_app_badger:
   socket_io_client: ^2.0.0-beta.4-nullsafety.0
   # allows us to easily use any of the 977 fonts from fonts.google.com
   google_fonts: ^2.0.0

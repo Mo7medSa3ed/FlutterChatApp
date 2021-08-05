@@ -15,6 +15,7 @@ void main() async {
   if (!Socket().socket.connected) {
     Socket().socket.connect();
   }
+
   runApp(ChangeNotifierProvider<AppProvider>(
       create: (_) => AppProvider(), builder: (ctx, w) => MyApp()));
 
@@ -55,7 +56,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             msgs: false, lastMsg: msg, isOpen: !isReciever));
       }
       if (isReciever) {
-        print("asdasdas");
         ChatMessage newMsg = ChatMessage.fromJson(msg, !isReciever);
         provider.addMsgTochat(newMsg);
       }

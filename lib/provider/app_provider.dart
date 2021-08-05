@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:chat/constants.dart';
 import 'package:chat/models/ChatMessage.dart';
 import 'package:chat/models/User.dart';
 import 'package:chat/models/message.dart';
@@ -28,6 +30,7 @@ class AppProvider extends ChangeNotifier {
 
   initUser(user) {
     this.user = user;
+    setBoolValue('online', user.online);
     notifyListeners();
   }
 

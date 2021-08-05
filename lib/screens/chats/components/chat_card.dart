@@ -113,7 +113,7 @@ class ChatCard extends StatelessWidget {
                 children: [
                   Opacity(
                       opacity: 0.64,
-                      child: Text(DateFormat('h m a')
+                      child: Text(DateFormat('h:mm a')
                           .format(DateTime.parse(chat.updatedAt.toString())))),
                   SizedBox(height: chat.msgCount == 0 ? 0 : 5),
                   chat.msgCount == 0
