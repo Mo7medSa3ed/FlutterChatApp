@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:chat/models/ChatMessage.dart';
 import 'package:chat/models/User.dart';
 import 'package:chat/models/message.dart';
 import 'package:chat/models/room.dart';
+import 'package:chat/notification.dart';
 import 'package:flutter/foundation.dart';
 
 class AppProvider extends ChangeNotifier {
@@ -10,6 +13,7 @@ class AppProvider extends ChangeNotifier {
   List<Room>? roomList;
   bool haRoom = false;
   bool search = false;
+  bool pressed = false;
   String? roomId;
 
   changeSearch({val}) {
@@ -18,6 +22,7 @@ class AppProvider extends ChangeNotifier {
     } else {
       search = !search;
     }
+    pressed = false;
     notifyListeners();
   }
 
@@ -38,7 +43,6 @@ class AppProvider extends ChangeNotifier {
   }
 
   initChatList(List<ChatMessage> chats) {
-    chatList.clear();
     chatList.addAll(chats);
     notifyListeners();
   }
@@ -46,12 +50,9 @@ class AppProvider extends ChangeNotifier {
   changeUserStatus(data) {
     final idx = roomList!.indexWhere((e) => e.id == data['roomId']);
     if (idx != -1) {
-      if (roomList![idx].isOpen ?? false) {
-        if (roomList![idx].userId!.id == data['reciever'] ||
-            roomList![idx].reciverId!.id == data['reciever']) {
-          roomList![0].recieverStatus = data['status'];
-          notifyListeners();
-        }
+      if (user!.id == data['reciever']) {
+        roomList![idx].recieverStatus = data['status'];
+        notifyListeners();
       }
     }
   }
@@ -59,15 +60,15 @@ class AppProvider extends ChangeNotifier {
   changeUserStatusForRoom(User data) {
     (roomList ?? []).forEach((e) {
       if (e.reciverId!.id == data.id) {
-        e.userId!.online = data.online;
-      } else if (e.userId!.id == data.id) {
         e.reciverId!.online = data.online;
+      } else if (e.userId!.id == data.id) {
+        e.userId!.online = data.online;
       }
     });
     notifyListeners();
   }
 
-  addMsgTochat(ChatMessage chat) {
+  addMsgTochat(ChatMessage chat) async {
     bool read = false;
     if (chatList.length > 0) {
       read = (chat.roomId == chatList[0].roomId);
@@ -87,10 +88,15 @@ class AppProvider extends ChangeNotifier {
           isRead: roomList![idx].isOpen!,
           text: chat.text);
 
-      if (!roomList![idx].isOpen!) {
-        roomList![idx].msgCount = roomList![idx].msgCount! + 1;
-      } else {
+      if (roomList![idx].isOpen!) {
         roomList![idx].msgCount = 0;
+      } else {
+        roomList![idx].msgCount = roomList![idx].msgCount! + 1;
+        await notificationPlugin.showNotification(
+            Random().nextDouble().toInt(),
+            roomList![idx].reciverId!.name,
+            chat.text ?? chat.attachLink,
+            chat.roomId);
       }
     }
 
@@ -106,6 +112,16 @@ class AppProvider extends ChangeNotifier {
       roomList!.add(room);
     }
     notifyListeners();
+  }
+
+  deleteRoom(id) {
+    if (roomList!.length > 0) {
+      int index = roomList!.indexWhere((e) => e.id == id);
+      if (index != -1) {
+        roomList!.removeAt(index);
+        notifyListeners();
+      }
+    }
   }
 
   getChatList() => List<ChatMessage>.from(chatList.reversed);

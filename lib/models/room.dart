@@ -24,14 +24,14 @@ class Room {
       this.updatedAt,
       this.userId});
 
-  factory Room.fromJson(json, {msgs = true, lastMsg}) => Room(
+  factory Room.fromJson(json, {msgs = true, lastMsg, isOpen}) => Room(
         msgCount: json['messages'].length,
         messages: (json['messages'].length > 0 && msgs)
             ? List.from(json['messages']
                 .map<Message>((e) => Message.fromJson(e))
                 .toList())
             : [],
-        isOpen: json['isOpen'],
+        isOpen: isOpen ?? json['isOpen'],
         id: json['_id'],
         reciverId: User.fromJson(json['reciverId']),
         userId: User.fromJson(json['userId']),

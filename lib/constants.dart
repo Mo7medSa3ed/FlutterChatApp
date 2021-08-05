@@ -15,6 +15,7 @@ const img =
     "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80";
 
 goTo(context, screan) {
+  print("Go to second screan");
   return Navigator.of(context).push(MaterialPageRoute(builder: (_) => screan));
 }
 
@@ -43,6 +44,11 @@ setBoolValue(key, value) async {
   return prfs.setBool(key, value);
 }
 
+clearPrfs() async {
+  final prfs = await SharedPreferences.getInstance();
+  prfs.clear();
+}
+
 showLoading(context) {
   return showDialog(
       context: context,
@@ -54,7 +60,7 @@ showLoading(context) {
 dateDiffrence(DateTime first, DateTime second) {
   final diff = DateTime.now().difference(second);
   if (diff.inMinutes == 0) {
-    return 'JustNow';
+    return 'Just now';
   } else if (diff.inMinutes < 60) {
     return '${diff.inMinutes} min ago';
   } else if (diff.inHours < 25) {
@@ -70,3 +76,5 @@ dateTimeFormat(date) {
   return DateFormat.yMEd().format(DateTime.parse(date)) +
       DateFormat.Hm().format(DateTime.parse(date)).toString();
 }
+
+

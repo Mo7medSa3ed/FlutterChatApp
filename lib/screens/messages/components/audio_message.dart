@@ -23,9 +23,14 @@ class _AudioMessageState extends State<AudioMessage> {
   /// Optional
   Widget slider() {
     return Slider.adaptive(
-        inactiveColor: kContentColorLightTheme.withOpacity(0.6),
+        inactiveColor: (!widget.message!.isSender
+                ? kPrimaryColor
+                : kContentColorLightTheme)
+            .withOpacity(0.6),
         activeColor: audioPlayerState != PlayerState.PAUSED
-            ? kContentColorLightTheme
+            ? !widget.message!.isSender
+                ? kPrimaryColor
+                : kContentColorLightTheme
             : kContentColorDarkTheme,
         value: timeProgress.toDouble(),
         max: audioDuration.toDouble(),
@@ -40,9 +45,10 @@ class _AudioMessageState extends State<AudioMessage> {
 
     /// Compulsory
     audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
-      setState(() {
-        audioPlayerState = state;
-      });
+      if (mounted)
+        setState(() {
+          audioPlayerState = state;
+        });
     });
 
     /// Optional
@@ -121,7 +127,9 @@ class _AudioMessageState extends State<AudioMessage> {
                         ? Icons.pause_rounded
                         : Icons.play_arrow_rounded,
                     color: audioPlayerState != PlayerState.PAUSED
-                        ? kContentColorLightTheme
+                        ? !widget.message!.isSender
+                            ? kPrimaryColor
+                            : kContentColorLightTheme
                         : kContentColorDarkTheme,
                   )),
               Expanded(

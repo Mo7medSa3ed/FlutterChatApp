@@ -11,7 +11,7 @@ class UserCard extends StatelessWidget {
   }) : super(key: key);
 
   final User user;
-  final  press;
+  final press;
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +28,22 @@ class UserCard extends StatelessWidget {
                   radius: 24,
                   backgroundImage: NetworkImage(user.img ?? img),
                 ),
-                if (user.online??false)
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      height: 16,
-                      width: 16,
-                      decoration: BoxDecoration(
-                        color: kPrimaryColor,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            width: 3),
-                      ),
-                    ),
-                  )
+                // if (user.online ?? false)
+                //   Positioned(
+                //     right: 0,
+                //     bottom: 0,
+                //     child: Container(
+                //       height: 16,
+                //       width: 16,
+                //       decoration: BoxDecoration(
+                //         color: kPrimaryColor,
+                //         shape: BoxShape.circle,
+                //         border: Border.all(
+                //             color: Theme.of(context).scaffoldBackgroundColor,
+                //             width: 3),
+                //       ),
+                //     ),
+                //   )
               ],
             ),
             Expanded(
@@ -71,13 +71,7 @@ class UserCard extends StatelessWidget {
                 ),
               ),
             ),
-            Opacity(
-                opacity: 0.64,
-                child: Text(DateTime.now()
-                        .difference(DateTime.parse('2021-07-26T19:52:05'))
-                        .inMinutes
-                        .toString() +
-                    ' min ')),
+            Opacity(opacity: 0.64, child: Text(dateTimeFormat(user.lastSeen))),
           ],
         ),
       ),

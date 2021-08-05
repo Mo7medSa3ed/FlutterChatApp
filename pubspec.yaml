@@ -40,13 +40,24 @@ dependencies:
   permission_handler:
   path_provider:
   flick_video_player:
-  photo_view:  
+  photo_view:
+  delayed_display:  
   audioplayers: ^0.19.1
+  background_fetch:
   socket_io_client: ^2.0.0-beta.4-nullsafety.0
   # allows us to easily use any of the 977 fonts from fonts.google.com
   google_fonts: ^2.0.0
+  rxdart:
+  flutter_local_notifications: ^8.0.0
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.9.1"
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/Logo_light.png"
+
   flutter_test:
     sdk: flutter
 

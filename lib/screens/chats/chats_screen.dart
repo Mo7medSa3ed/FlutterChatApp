@@ -1,6 +1,9 @@
 import 'package:chat/constants.dart';
+import 'package:chat/models/User.dart';
+import 'package:chat/notification.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:chat/screens/chats/components/peobleBody.dart';
+import 'package:chat/screens/messages/message_screen.dart';
 import 'package:chat/screens/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +17,21 @@ class ChatsScreen extends StatefulWidget {
 
 class _ChatsScreenState extends State<ChatsScreen> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    notificationPlugin
+        .setListnerForLowerVersions(onNotificationInlowerVersions);
+    notificationPlugin.setOnNotificationClick(onNotificationClick);
+    super.initState();
+  }
+
+  onNotificationInlowerVersions(ReceivedNotification receivedNotification) {}
+
+  Future onNotificationClick(String payload) async {
+    goTo(context, MessagesScreen(User(), payload));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +84,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
     return AppBar(
       backgroundColor: kPrimaryColor,
       automaticallyImplyLeading: false,
-      title: Text("Chat App"),
+      title: Text("Chaty"),
       actions: _selectedIndex == 0
           ? [
               IconButton(

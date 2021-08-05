@@ -6,6 +6,7 @@ import 'package:chat/models/User.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:chat/screens/chats/chats_screen.dart';
+import 'package:chat/screens/signinOrSignUp/signin_or_signup_screen.dart';
 import 'package:chat/socket.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +36,7 @@ class API {
             receiveDataWhenStatusError: true,
             responseType: ResponseType.json),
       )
-          .then((res) {
+          .then((res) async {
         if ([200, 201].contains(res.statusCode)) {
           final provider = Provider.of<AppProvider>(context, listen: false);
           provider.initUser(User.fromJson(res.data));
@@ -43,7 +44,8 @@ class API {
           if (!Socket().socket.connected) {
             Socket().socket.connect();
           }
-          Socket().emitOnline(res.data['id']);
+          Socket().emitOnline(res.data['_id']);
+          await getAllChats(res.data['_id']);
           goToWithRemoveUntill(context, ChatsScreen());
         } else {
           Navigator.of(context).pop();
@@ -92,7 +94,7 @@ class API {
           .post('$baseURL/users/',
               data: user,
               options: Options(contentType: Headers.formUrlEncodedContentType))
-          .then((res) {
+          .then((res) async {
         if ([200, 201].contains(res.statusCode)) {
           final provider = Provider.of<AppProvider>(context, listen: false);
           provider.initUser(User.fromJson(res.data));
@@ -100,7 +102,9 @@ class API {
           if (!Socket().socket.connected) {
             Socket().socket.connect();
           }
-          Socket().emitOnline(res.data['id']);
+          Socket().emitOnline(res.data['_id']);
+
+          await getAllChats(res.data['_id']);
           goToWithRemoveUntill(context, ChatsScreen());
         } else {
           Navigator.of(context).pop();
@@ -136,6 +140,10 @@ class API {
           final provider = Provider.of<AppProvider>(context, listen: false);
           provider.initUser(User.fromJson(res.data));
           setValue('user', jsonEncode(res.data));
+          if (!Socket().socket.connected) {
+            Socket().socket.connect();
+          }
+          Socket().emitOnline(res.data['_id']);
           Navigator.of(context).pop();
           Alert.sucessAlert(
               ctx: context,
@@ -181,6 +189,10 @@ class API {
           final provider = Provider.of<AppProvider>(context, listen: false);
           provider.initUser(User.fromJson(res.data));
           setValue('user', jsonEncode(res.data));
+          if (!Socket().socket.connected) {
+            Socket().socket.connect();
+          }
+          Socket().emitOnline(res.data['_id']);
           Navigator.of(context).pop();
         } else {
           Navigator.of(context).pop();
@@ -242,18 +254,24 @@ class API {
     }
   }
 
-  Future<dynamic>? getAllMessages(roomId) async {
+  Future<dynamic>? getAllMessages(roomId, page) async {
     final uid = Provider.of<AppProvider>(context, listen: false).user!.id;
     try {
       final dio = new Dio();
-      final res = await dio.get('$baseURL/messages/$roomId',
+      final res = await dio.get('$baseURL/messages/$roomId/$page',
           options: Options(responseType: ResponseType.json));
       if ([200, 201].contains(res.statusCode)) {
         List<ChatMessage> data = res.data
             .map<ChatMessage>(
                 (e) => ChatMessage.fromJson(e, e['senderTo'] != uid))
             .toList();
+        if (page == 1)
+          Provider.of<AppProvider>(context, listen: false).chatList.clear();
         Provider.of<AppProvider>(context, listen: false).initChatList(data);
+        if (data.length < 20) {
+          return true;
+        }
+        return false;
       } else {
         return null;
       }
@@ -266,7 +284,6 @@ class API {
     final uid = Provider.of<AppProvider>(context, listen: false).user!.id;
     try {
       final dio = new Dio();
-      print(msg);
 
       final res = await dio.post('$baseURL/messages/$uid',
           data: msg, options: Options(responseType: ResponseType.json));
@@ -274,7 +291,54 @@ class API {
       if ([200, 201].contains(res.statusCode)) {
         ChatMessage data = ChatMessage.fromJson(res.data, true);
         Provider.of<AppProvider>(context, listen: false).addMsgTochat(data);
+
         return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return Future.value(false);
+    }
+  }
+
+  Future<dynamic>? deleteAccount() async {
+    showLoading(context);
+    final uid = Provider.of<AppProvider>(context, listen: false).user!.id;
+    try {
+      final dio = new Dio();
+
+      final res = await dio.delete('$baseURL/users/$uid',
+          options: Options(responseType: ResponseType.json));
+
+      if ([200, 201].contains(res.statusCode)) {
+        if (res.data['success']) {
+          clearPrfs();
+          goToWithRemoveUntill(context, SigninOrSignupScreen());
+        }
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return Future.value(false);
+    }
+  }
+
+  Future<dynamic>? deleteChat(id) async {
+    final pro = Provider.of<AppProvider>(context, listen: false);
+    showLoading(context);
+    try {
+      final dio = new Dio();
+
+      final res = await dio.delete('$baseURL/rooms/$id',
+          options: Options(responseType: ResponseType.json));
+
+      if ([200, 201].contains(res.statusCode)) {
+        print(res.data);
+        if (res.data['success']) {
+          pro.deleteRoom(id);
+          Navigator.of(context).pop();
+          return res.data['success'];
+        }
       } else {
         return false;
       }

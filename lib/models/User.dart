@@ -7,7 +7,8 @@ class User {
   String? createdAt;
   String? updatedAt;
   String? lastSeen;
-  bool? online =false;
+
+  bool? online = false;
 
   User(
       {this.img,

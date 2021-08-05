@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:chat/api.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/models/User.dart';
+import 'package:chat/notification.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:chat/screens/chats/chats_screen.dart';
 import 'package:chat/screens/signinOrSignUp/signin_or_signup_screen.dart';
@@ -22,7 +24,17 @@ class _SplashScreanState extends State<SplashScrean> {
   @override
   void initState() {
     check();
+
     super.initState();
+  }
+
+  getRoom() async {
+    final provider = Provider.of<AppProvider>(context, listen: false);
+    if (provider.roomList == null) {
+      final id = provider.user?.id;
+      await API(context).getAllChats(id);
+      setState(() {});
+    }
   }
 
   check() async {
@@ -37,8 +49,8 @@ class _SplashScreanState extends State<SplashScrean> {
       if (newUser != 'error' && newUser != null) {
         if (newUser.updatedAt == user.updatedAt) {
           Provider.of<AppProvider>(context, listen: false).initUser(user);
-          Socket().emitOnline(user.id); 
-
+          Socket().emitOnline(user.id);
+          await getRoom();
           goToWithRemoveUntill(context, ChatsScreen());
         } else {
           goToWithRemoveUntill(context, SigninOrSignupScreen());

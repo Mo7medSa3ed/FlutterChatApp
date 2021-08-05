@@ -1,3 +1,5 @@
+import 'package:background_fetch/background_fetch.dart';
+import 'package:chat/background_fetch.dart';
 import 'package:chat/models/ChatMessage.dart';
 import 'package:chat/models/User.dart';
 import 'package:chat/models/room.dart';
@@ -9,11 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   if (!Socket().socket.connected) {
     Socket().socket.connect();
   }
   runApp(ChangeNotifierProvider<AppProvider>(
       create: (_) => AppProvider(), builder: (ctx, w) => MyApp()));
+
+  await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class MyApp extends StatefulWidget {
@@ -25,9 +30,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance!.addObserver(this);
+
     Socket().socket.on('ChangeUserStatus', (data) {
       final pro = Provider.of<AppProvider>(context, listen: false);
-      pro.initUser(User.fromJson(data));
+      if (data['_id'] == pro.user!.id) {
+        pro.initUser(User.fromJson(data));
+      }
       pro.changeUserStatusForRoom(User.fromJson(data));
     });
 
@@ -36,21 +44,23 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       pro.changeUserStatus(data);
     });
 
-    Socket().socket.on('NewMessage', (data) {
+    Socket().socket.on('NewMessage', (data) async {
       final msg = data['message'];
       final provider = Provider.of<AppProvider>(context, listen: false);
       final uid = provider.user!.id;
-      final isSender = msg['senderTo'] == uid;
+      final isReciever = msg['senderTo'] == uid;
 
-      if (isSender) {
-        if (data['room'] != null) {
-          provider
-              .addRoom(Room.fromJson(data['room'], msgs: false, lastMsg: msg));
-        }
-        ChatMessage newMsg = ChatMessage.fromJson(msg, !isSender);
+      if (data['room'] != null) {
+        provider.addRoom(Room.fromJson(data['room'],
+            msgs: false, lastMsg: msg, isOpen: !isReciever));
+      }
+      if (isReciever) {
+        print("asdasdas");
+        ChatMessage newMsg = ChatMessage.fromJson(msg, !isReciever);
         provider.addMsgTochat(newMsg);
       }
     });
+    initPlatformState();
     super.initState();
   }
 

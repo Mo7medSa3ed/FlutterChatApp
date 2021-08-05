@@ -1,4 +1,5 @@
 import 'package:chat/constants.dart';
+import 'package:chat/models/User.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,38 +7,42 @@ import 'package:provider/provider.dart';
 import 'components/body.dart';
 
 class MessagesScreen extends StatelessWidget {
-  final chatUser;
+  User chatUser;
   final roomId;
   MessagesScreen(this.chatUser, this.roomId);
-  var idx = -1;
+  int idx = -1;
+  var pro;
+
   openRoom(context, value) {
-    final pro = Provider.of<AppProvider>(context, listen: false);
-    idx = pro.roomList!.indexWhere((e) => e.id == roomId);
-    if (idx != -1) {
-      pro.roomList![idx].isOpen = value;
-      pro.roomList![idx].msgCount = 0;
+    if (roomId != null) {
+      idx = pro.roomList!.indexWhere((e) => e.id == roomId);
+      if (idx != -1) {
+        pro.roomList![idx].isOpen = value;
+        pro.roomList![idx].msgCount = 0;
+
+        if (chatUser.id == null) {
+          chatUser = pro.roomList![idx].reciverId;
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AppProvider>(context, listen: false);
+    pro = Provider.of<AppProvider>(context, listen: false);
     openRoom(context, true);
     return WillPopScope(
       onWillPop: () {
-        idx = provider.roomList!.indexWhere((e) => e.id == roomId);
+        idx = pro.roomList!.indexWhere((e) => e.id == roomId);
         if (idx != -1) {
-          provider.roomList![idx].isOpen = false;
+          pro.roomList![idx].isOpen = false;
         }
 
         return Future.value(true);
       },
       child: Scaffold(
         appBar: buildAppBar(context),
-        body: Body(
-          roomId,
-          chatUser.id,
-        ),
+        body: Body(roomId, chatUser.id, chatUser.img ?? img),
       ),
     );
   }
@@ -64,20 +69,30 @@ class MessagesScreen extends StatelessWidget {
                 chatUser.name ?? '',
                 style: TextStyle(fontSize: 16),
               ),
-              !chatUser.online
-                  ? Consumer<AppProvider>(
-                      builder: (ctx, app, w) => Text(
-                            app.roomList!.length > 0
-                                ? app.roomList![idx].recieverStatus != null
-                                    ? app.roomList![idx].recieverStatus!
-                                    : "online"
-                                : "",
-                            style: TextStyle(fontSize: 12),
-                          ))
-                  : Text(
-                      "Last seen ${dateTimeFormat(chatUser.lastSeen)} ",
-                      style: TextStyle(fontSize: 12),
-                    )
+              Consumer<AppProvider>(builder: (ctx, app, w) {
+                if (app.chatList.length > 0 && idx == -1) {
+                  final rid = app.chatList[0].roomId;
+                  idx = pro.roomList!.indexWhere((e) => e.id == rid);
+                  if (idx != -1) {
+                    pro.roomList![idx].isOpen = true;
+                    pro.roomList![idx].msgCount = 0;
+                  }
+                }
+
+                return chatUser.online ?? false
+                    ? Text(
+                        app.roomList!.length > 0
+                            ? app.roomList![idx].recieverStatus != null
+                                ? app.roomList![idx].recieverStatus!
+                                : "online"
+                            : "",
+                        style: TextStyle(fontSize: 12),
+                      )
+                    : Text(
+                        "Last seen ${dateTimeFormat(chatUser.lastSeen)} ",
+                        style: TextStyle(fontSize: 12),
+                      );
+              })
             ],
           )
         ],

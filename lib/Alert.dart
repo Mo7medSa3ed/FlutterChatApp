@@ -1,3 +1,4 @@
+import 'package:chat/constants.dart';
 import 'package:cool_alert/cool_alert.dart';
 
 class Alert {
@@ -27,5 +28,17 @@ class Alert {
       type: CoolAlertType.loading,
       text: "Loading please wait....",
     );
+  }
+
+  static warningAlert({ctx, confirm}) {
+    return CoolAlert.show(
+        barrierDismissible: false,
+        context: ctx,
+        type: CoolAlertType.warning,
+        showCancelBtn: true,
+        title: 'Delete Chat',
+        text: "Are you sure to delete this chat ?",
+        confirmBtnColor: kPrimaryColor,
+        onConfirmBtnTap: confirm);
   }
 }

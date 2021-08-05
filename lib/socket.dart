@@ -17,4 +17,10 @@ class Socket {
   emitChangeStatus(data) {
     socket.emit('changeStatus', data);
   }
+
+  
+
+
+
+
 }

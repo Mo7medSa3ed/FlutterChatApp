@@ -37,6 +37,7 @@ class ChatMessage {
 }
 
 msgTypeReturn(type) {
+  print(type);
   if (type == 'text') {
     return ChatMessageType.text;
   } else if (type == 'record') {

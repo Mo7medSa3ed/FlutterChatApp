@@ -34,10 +34,6 @@ class _ChatInputFieldState extends State<ChatInputField> {
   RecordingStatus status = RecordingStatus.Unset;
   @override
   void initState() {
-    
-    
-
-
     textController.addListener(() {
       setState(() {});
     });
@@ -75,6 +71,15 @@ class _ChatInputFieldState extends State<ChatInputField> {
         status = RecordingStatus.Recording;
       });
       recorder!.start();
+      final chatList =
+          Provider.of<AppProvider>(context, listen: false).chatList;
+      if (chatList.length > 0) {
+        Socket().emitChangeStatus({
+          'roomId': chatList[0].roomId,
+          'reciever': "${widget.senderToId}",
+          'status': 'Recording...'
+        });
+      }
     } else {
       print("you want to allow mic permission");
     }
@@ -82,6 +87,14 @@ class _ChatInputFieldState extends State<ChatInputField> {
 
   stopRecording() async {
     Recording? res = await recorder!.stop();
+    final chatList = Provider.of<AppProvider>(context, listen: false).chatList;
+    if (chatList.length > 0) {
+      Socket().emitChangeStatus({
+        'roomId': chatList[0].roomId,
+        'reciever': "${widget.senderToId}",
+        'status': null
+      });
+    }
     setState(() {
       status = RecordingStatus.Unset;
       recordFile = File(res!.path!);
@@ -90,6 +103,14 @@ class _ChatInputFieldState extends State<ChatInputField> {
 
   pauseRecording() async {
     await recorder!.pause();
+    final chatList = Provider.of<AppProvider>(context, listen: false).chatList;
+    if (chatList.length > 0) {
+      Socket().emitChangeStatus({
+        'roomId': chatList[0].roomId,
+        'reciever': "${widget.senderToId}",
+        'status': null
+      });
+    }
     setState(() {
       status = RecordingStatus.Paused;
     });
@@ -97,6 +118,14 @@ class _ChatInputFieldState extends State<ChatInputField> {
 
   resumeRecording() async {
     await recorder!.resume();
+    final chatList = Provider.of<AppProvider>(context, listen: false).chatList;
+    if (chatList.length > 0) {
+      Socket().emitChangeStatus({
+        'roomId': chatList[0].roomId,
+        'reciever': "${widget.senderToId}",
+        'status': 'Recording...'
+      });
+    }
     setState(() {
       status = RecordingStatus.Recording;
     });

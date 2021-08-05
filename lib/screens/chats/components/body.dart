@@ -1,9 +1,9 @@
-import 'package:chat/api.dart';
 import 'package:chat/components/filled_outline_button.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/models/room.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:chat/screens/messages/message_screen.dart';
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,33 +14,50 @@ class Body extends StatefulWidget {
   _BodyState createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
   List<Room>? chats;
   List<Room>? filteredChats = [];
   bool pressed = true;
   var uid;
+  // AnimationController? controller;
+  // Animation<Offset>? offset;
   @override
   void initState() {
     uid = Provider.of<AppProvider>(context, listen: false).user!.id;
     getRoom();
+    // controller =
+    //     AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+
+    // offset = Tween<Offset>(
+    //   begin: Offset(1.0, 0),
+    //   end: Offset.zero,
+    // ).animate(controller!);
+
     super.initState();
   }
 
   getRoom() async {
     final provider = Provider.of<AppProvider>(context, listen: false);
-    if (provider.roomList == null) {
-      final id = provider.user?.id;
-      filteredChats = await API(context).getAllChats(id);
-      setState(() {});
-    } else {
+    setState(() {
       filteredChats = provider.roomList;
-    }
+    });
+  }
+
+  @override
+  void dispose() {
+    //controller!.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var search = context.select<AppProvider, bool>((value) => value.search);
-
+    // if (Provider.of<AppProvider>(context, listen: false).search) {
+    //   controller!.reset();
+    //   controller!.forward();
+    // } else if (!Provider.of<AppProvider>(context, listen: false).search) {
+    //   controller!.reset();
+    //   controller!.forward();
+    // }
     return Consumer<AppProvider>(builder: (ctx, pro, w) {
       chats = pro.roomList;
 
@@ -50,75 +67,82 @@ class _BodyState extends State<Body> {
             padding: EdgeInsets.fromLTRB(
                 kDefaultPadding, 0, kDefaultPadding, kDefaultPadding),
             color: kPrimaryColor,
-            child: !search
-                ? Row(
-                    children: [
-                      FillOutlineButton(
-                          isFilled: pressed,
+            child: !pro.search
+                ? DelayedDisplay(
+                    delay: Duration(milliseconds: 600),
+                    fadeIn: true,
+                    child: Row(
+                      children: [
+                        FillOutlineButton(
+                            isFilled: pressed,
+                            press: () {
+                              filteredChats = chats;
+                              pressed = true;
+                              setState(() {});
+                            },
+                            text: "Recent Message"),
+                        SizedBox(width: kDefaultPadding),
+                        FillOutlineButton(
+                          isFilled: !pressed,
                           press: () {
-                            filteredChats = chats;
-                            pressed = true;
+                            var filtered = chats!
+                                .where((e) =>
+                                    e.reciverId!.online! || e.userId!.online!)
+                                .toList();
+
+                            filteredChats = filtered;
+                            pressed = false;
                             setState(() {});
                           },
-                          text: "Recent Message"),
-                      SizedBox(width: kDefaultPadding),
-                      FillOutlineButton(
-                        isFilled: !pressed,
-                        press: () {
-                          var filtered = chats!
-                              .where((e) =>
-                                  e.reciverId!.online! || e.userId!.online!)
-                              .toList();
+                          text: "Active",
+                        ),
+                      ],
+                    ),
+                  )
+                : DelayedDisplay(
+                    delay: Duration(milliseconds: 600),
+                    fadeIn: true,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding * 1.5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Theme.of(ctx)
+                              .scaffoldBackgroundColor
+                              .withOpacity(0.5)),
+                      child: TextField(
+                        maxLength: 20,
+                        onChanged: (String val) {
+                          if (val.length > 0) {
+                            var filtered = chats!
+                                .where((e) =>
+                                    e.reciverId!.name!
+                                        .toLowerCase()
+                                        .contains(val.trim().toLowerCase()) ||
+                                    e.reciverId!.phone!
+                                        .toLowerCase()
+                                        .contains(val.trim().toLowerCase()))
+                                .toList();
 
-                          filteredChats = filtered;
-                          pressed = false;
+                            filteredChats = filtered;
+                          } else {
+                            filteredChats = chats;
+                          }
                           setState(() {});
                         },
-                        text: "Active",
+                        cursorColor: Theme.of(ctx).textTheme.bodyText1!.color!,
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          counterText: '',
+                          hintText: "Search here...",
+                          border: InputBorder.none,
+                        ),
                       ),
-                    ],
-                  )
-                : Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: kDefaultPadding * 1.5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Theme.of(ctx)
-                            .scaffoldBackgroundColor
-                            .withOpacity(0.5)),
-                    child: TextField(
-                      maxLength: 20,
-                      onChanged: (String val) {
-                        if (val.length > 0) {
-                          var filtered = chats!
-                              .where((e) =>
-                                  e.reciverId!.name!
-                                      .toLowerCase()
-                                      .contains(val.trim().toLowerCase()) ||
-                                  e.reciverId!.phone!
-                                      .toLowerCase()
-                                      .contains(val.trim().toLowerCase()))
-                              .toList();
-
-                          filteredChats = filtered;
-                        } else {
-                          filteredChats = chats;
-                        }
-                        setState(() {});
-                      },
-                      cursorColor: Theme.of(ctx).textTheme.bodyText1!.color!,
-                      maxLines: 1,
-                      decoration: InputDecoration(
-                        counterText: '',
-                        hintText: "Search here...",
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
+                    )),
           ),
-          Expanded(
-              child: (chats != null && chats!.length > 0)
-                  ? ListView.builder(
+          (chats != null && chats!.length > 0)
+              ? Expanded(
+                  child: ListView.builder(
                       physics: BouncingScrollPhysics(),
                       itemCount: filteredChats?.length,
                       itemBuilder: (ctx, index) {
@@ -140,23 +164,20 @@ class _BodyState extends State<Body> {
                             ),
                           ),
                         );
-                      })
-                  : (chats == null)
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: kPrimaryColor,
-                          ),
-                        )
-                      : Center(
-                          child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: kDefaultPadding * 3),
-                          child: Text(
-                            "Hi you don't have any chats search for firends to chat with them.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18, letterSpacing: 2),
-                          ),
-                        ))),
+                      }),
+                )
+              : Expanded(
+                  child: Center(
+                      child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: kDefaultPadding * 3),
+                    child: Text(
+                      "Hi you don't have any chats search for firends to chat with them.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18, letterSpacing: 2),
+                    ),
+                  )),
+                ),
         ],
       );
     });

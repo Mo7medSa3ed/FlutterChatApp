@@ -1,3 +1,4 @@
+import 'package:chat/api.dart';
 import 'package:chat/components/primary_button.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/models/User.dart';
@@ -68,12 +69,20 @@ class ProfileScrean extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Spacer(),
-                      Container(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          child: PrimaryButton(
-                              text: 'Edit Profile',
-                              press: () => goTo(context, EditProfileScrean()))),
+                      Expanded(
+                        child: PrimaryButton(
+                            text: 'Delete Account',
+                            color: kErrorColor,
+                            press: () async => API(context).deleteAccount()),
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        child: PrimaryButton(
+                            text: 'Edit Profile',
+                            press: () => goTo(context, EditProfileScrean())),
+                      ),
                     ],
                   ),
                   Spacer(
