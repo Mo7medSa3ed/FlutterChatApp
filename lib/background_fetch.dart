@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:background_fetch/background_fetch.dart';
 import 'package:chat/models/User.dart';
@@ -45,7 +44,6 @@ Future<void> initPlatformState() async {
 }
 
 void backgroundFetchHeadlessTask(HeadlessTask task) async {
-  print(task);
   var taskId = task.taskId;
   var timeout = task.timeout;
   if (timeout) {
@@ -60,9 +58,9 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 
 void onBackgroundFetch(String taskId) async {
 // if reciever
-
   if (taskId == 'com.example.chat') {
     if (!Socket().socket.connected) {
+      print("dsadsd");
       Socket().socket.connect();
     }
     Socket().socket.on('NewMessage', (data) async {
@@ -74,17 +72,15 @@ void onBackgroundFetch(String taskId) async {
           : null;
       if (msg['senderTo'] == user!.id) {
         var count = data['count'];
-        print(count);
+
         if (count > 0) {
           FlutterAppBadger.updateBadgeCount(count);
         } else {
           FlutterAppBadger.removeBadge();
         }
-        await notificationPlugin.showNotification(
-            Random().nextInt(10000),
-            data['recieverName'],
-            msg['text'] ?? msg['attachLink'],
-            msg['roomId']);
+
+        await notificationPlugin.showNotification(count, data['recieverName'],
+            msg['text'] ?? msg['attachLink'], msg['roomId']);
       }
     });
   }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:chat/constants.dart';
 import 'package:chat/models/ChatMessage.dart';
 import 'package:chat/models/User.dart';
@@ -75,10 +73,10 @@ class AppProvider extends ChangeNotifier {
     if (chatList.length > 0) {
       read = (chat.roomId == chatList[0].roomId);
       if (read) {
-        chatList.add(chat);
+        chatList.insert(0, chat);
       }
     } else {
-      chatList.add(chat);
+      chatList.insert(0, chat);
     }
     final idx = roomList!.indexWhere((e) => e.id == chat.roomId);
     if (idx != -1) {
@@ -94,8 +92,9 @@ class AppProvider extends ChangeNotifier {
         roomList![idx].msgCount = 0;
       } else {
         roomList![idx].msgCount = roomList![idx].msgCount! + 1;
+
         await notificationPlugin.showNotification(
-            Random().nextDouble().toInt(),
+            chatList.length,
             roomList![idx].reciverId!.name,
             chat.text ?? chat.attachLink,
             chat.roomId);
@@ -126,5 +125,5 @@ class AppProvider extends ChangeNotifier {
     }
   }
 
-  getChatList() => List<ChatMessage>.from(chatList.reversed);
+  getChatList() => chatList;
 }

@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:io' show Platform;
 import 'package:rxdart/subjects.dart';
 
@@ -59,6 +63,32 @@ class NotificationPlugin {
   }
 
   Future<void> showNotification(id, title, body, payload) async {
+    // var image =
+    //     "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg";
+    // var bigPicturePath;
+    // bigPicturePath = await downloadAndSaveFile(image);
+
+    // const Person me = Person(
+    //   name: 'Me',
+    //   key: '123',
+
+    // );
+    // final Person lunchBot = Person(
+    //   name: "asdasd",
+    //   key: '12313',
+    //   bot: true,
+    //   icon: BitmapFilePathAndroidIcon(bigPicturePath),
+    // );
+    // final List<Message> messages = <Message>[
+    //   Message(body, DateTime.now(), lunchBot),
+    // ];
+    // final MessagingStyleInformation messagingStyle = MessagingStyleInformation(
+    //     me,
+    //     groupConversation: true,
+    //     conversationTitle: ' ',
+    //     htmlFormatContent: true,
+    //     htmlFormatTitle: true,
+    //     messages: messages);
     var androidChannel = AndroidNotificationDetails(
       'CHANNEL_ID',
       'CHANNEL_NAME',
@@ -81,16 +111,20 @@ class NotificationPlugin {
   }
 }
 
-// Future<String> downloadAndSaveFile(String url) async {
-//   String fileName = url.split('/').last;
-
-//   final Directory directory = await getApplicationDocumentsDirectory();
-//   final String filePath = '${directory.path}/$fileName';
-//   final http.Response response = await http.get(Uri.parse(url));
-//   final File file = File(filePath);
-//   await file.writeAsBytes(response.bodyBytes);
-//   return filePath;
-// }
+Future<String> downloadAndSaveFile(String url) async {
+  String fileName = url.split('/').last;
+  var directory = await getApplicationDocumentsDirectory();
+  final String filePath = '${directory.path}/$fileName';
+  Response<List<int>> rs;
+  rs = await Dio().get<List<int>>(
+    url,
+    options: Options(
+        responseType: ResponseType.bytes), // set responseType to `bytes`
+  );
+  final File file = File(filePath);
+  await file.writeAsBytes(rs.data!);
+  return filePath;
+}
 
 // Future<void> showNotificationWithAttachment({
 //   @required int id,

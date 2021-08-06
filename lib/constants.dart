@@ -74,7 +74,6 @@ dateDiffrence(DateTime first, DateTime second) {
 
 dateTimeFormat(date) {
   return DateFormat.yMEd().format(DateTime.parse(date)) +
+      " " +
       DateFormat.Hm().format(DateTime.parse(date)).toString();
 }
-
-

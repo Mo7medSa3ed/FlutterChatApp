@@ -1,3 +1,5 @@
+import 'package:chat/encreption.dart';
+
 class Message {
   String? text;
   String? id;
@@ -38,7 +40,7 @@ class Message {
       map["attachLink"] = attachLink;
     }
     if (text != null) {
-      map['text'] = text ?? '';
+      map['text'] = Encreption.encreptAES(text) ?? '';
     }
     map['senderTo'] = senderTo;
     map['roomId'] = roomId;

@@ -281,7 +281,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           final data = Message(
                               roomId: rid,
                               senderTo: "${widget.senderToId}",
-                              text: url ?? textController.text.trim(),
+                              text: url !=null ?'record':textController.text.trim(),
                               type: url != null ? 'record' : 'text',
                               attachLink: url);
 

@@ -50,7 +50,7 @@ class _VisualComponentState extends State<VisualComponent>
 
     controller = AnimationController(
         duration: Duration(milliseconds: widget.duration), vsync: this);
-    animation = Tween<double>(begin: 0, end: 50)
+    animation = Tween<double>(begin: 0, end: 40)
         .animate(CurvedAnimation(curve: Curves.easeInOut, parent: controller!))
           ..addListener(() {
             setState(() {});
@@ -72,7 +72,7 @@ class _VisualComponentState extends State<VisualComponent>
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 8,
+      width: 5,
       height: animation!.value,
       decoration: BoxDecoration(
           color: kPrimaryColor, borderRadius: BorderRadius.circular(5)),
@@ -100,7 +100,7 @@ class _StaticVisualComponentState extends State<StaticVisualComponent>
 
     controller = AnimationController(
         duration: Duration(milliseconds: widget.duration), vsync: this);
-    animation = Tween<double>(begin: 0, end: 50)
+    animation = Tween<double>(begin: 0, end: 40)
         .animate(CurvedAnimation(curve: Curves.easeInOut, parent: controller!))
           ..addListener(() {
             setState(() {});
@@ -113,15 +113,15 @@ class _StaticVisualComponentState extends State<StaticVisualComponent>
 
   @override
   void dispose() {
-    super.dispose();
     controller!.dispose();
+    super.dispose();
   }
 
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 8,
+      width: 5,
       height: animation!.value,
       decoration: BoxDecoration(
           color: kPrimaryColor, borderRadius: BorderRadius.circular(5)),

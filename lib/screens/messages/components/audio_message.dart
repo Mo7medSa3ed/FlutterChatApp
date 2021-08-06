@@ -56,12 +56,12 @@ class _AudioMessageState extends State<AudioMessage> {
         .attachLink!); // Triggers the onDurationChanged listener and sets the max duration string
     audioPlayer.onDurationChanged.listen((Duration duration) {
       setState(() {
-        audioDuration = duration.inSeconds;
+        audioDuration = duration.inMilliseconds;
       });
     });
     audioPlayer.onAudioPositionChanged.listen((Duration position) async {
       setState(() {
-        timeProgress = position.inSeconds;
+        timeProgress = position.inMilliseconds;
       });
     });
   }
@@ -87,7 +87,7 @@ class _AudioMessageState extends State<AudioMessage> {
 
   /// Optional
   void seekToSec(int sec) {
-    Duration newPos = Duration(seconds: sec);
+    Duration newPos = Duration(milliseconds: sec);
     audioPlayer
         .seek(newPos); // Jumps to the given position within the audio file
   }
@@ -146,9 +146,9 @@ class _AudioMessageState extends State<AudioMessage> {
                         SizedBox(
                           width: 8,
                         ),
-                        Text(getTimeString(timeProgress)),
+                        Text(getTimeString((timeProgress / 1000).toInt())),
                         Spacer(),
-                        Text(getTimeString(audioDuration)),
+                        Text(getTimeString((audioDuration / 1000).toInt())),
                         SizedBox(
                           width: 8,
                         ),

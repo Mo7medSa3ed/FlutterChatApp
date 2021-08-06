@@ -41,7 +41,8 @@ dependencies:
   path_provider:
   flick_video_player:
   photo_view:
-  delayed_display:  
+  delayed_display:
+  encrypt:  
   audioplayers: ^0.19.1
   background_fetch:
   flutter_app_badger:

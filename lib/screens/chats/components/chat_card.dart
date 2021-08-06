@@ -100,7 +100,9 @@ class ChatCard extends StatelessWidget {
                         child: Text(
                           chat.recieverStatus != null
                               ? chat.recieverStatus!
-                              : (chat.lastMessage!.text ?? ''),
+                              : (chat.lastMessage!.text != null
+                                  ? chat.lastMessage!.text
+                                  : chat.lastMessage!.type)??'' ,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

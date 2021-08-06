@@ -1,3 +1,5 @@
+import 'package:chat/encreption.dart';
+
 enum ChatMessageType { text, audio, image, video, document, record }
 enum MessageStatus { not_sent, not_view, viewed }
 
@@ -25,7 +27,7 @@ class ChatMessage {
   });
 
   factory ChatMessage.fromJson(json, sender) => ChatMessage(
-      text: json['text'],
+      text:Encreption.decreptAES( json['text']),
       id: json['_id'],
       roomId: json['roomId'],
       senderTo: json['senderTo'],

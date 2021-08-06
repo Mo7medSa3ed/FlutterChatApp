@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 class API {
   API(this.context);
   final context;
-  final baseURL = 'http://10.0.2.2:3000';
+  final baseURL = 'http://192.168.1.12:3000';
 
   // login User
 
@@ -287,7 +287,7 @@ class API {
 
       final res = await dio.post('$baseURL/messages/$uid',
           data: msg, options: Options(responseType: ResponseType.json));
-
+print(res.data);
       if ([200, 201].contains(res.statusCode)) {
         ChatMessage data = ChatMessage.fromJson(res.data, true);
         Provider.of<AppProvider>(context, listen: false).addMsgTochat(data);

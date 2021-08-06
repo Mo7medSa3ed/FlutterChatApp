@@ -69,7 +69,7 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
             color: kPrimaryColor,
             child: !pro.search
                 ? DelayedDisplay(
-                    delay: Duration(milliseconds: 100),
+                    delay: Duration(milliseconds: 50),
                     fadeIn: true,
                     child: Row(
                       children: [
@@ -100,7 +100,7 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                     ),
                   )
                 : DelayedDisplay(
-                    delay: Duration(milliseconds: 100),
+                    delay: Duration(milliseconds: 50),
                     fadeIn: true,
                     child: Container(
                       padding: EdgeInsets.symmetric(

@@ -10,7 +10,7 @@ class Room {
   String? createdAt;
   String? updatedAt;
   Message? lastMessage;
-  int? msgCount = 0;
+  int? msgCount =-1;
   String? recieverStatus;
 
   Room(
