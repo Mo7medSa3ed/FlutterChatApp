@@ -2,7 +2,7 @@ import 'package:chat/constants.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class Socket {
-  final socket = io('http://192.168.1.12:3000', <String, dynamic>{
+  final socket = io('https://chatserver1235.herokuapp.com/', <String, dynamic>{
     'transports': ['websocket'],
     'autoConnect': true,
   });

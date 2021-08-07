@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 class API {
   API(this.context);
   final context;
-  final baseURL = 'http://192.168.1.12:3000';
+  final baseURL = 'https://chatserver1235.herokuapp.com';
 
   // login User
 
