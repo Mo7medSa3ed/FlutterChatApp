@@ -23,7 +23,7 @@ class Message {
       this.text});
 
   factory Message.fromJson(json) => Message(
-        text: json['text'],
+        text: json['text'] != null ? Encreption.decreptAES(json['text'].trim()) : '',
         type: json['type'],
         id: json['_id'],
         roomId: json['roomId'],
@@ -40,7 +40,7 @@ class Message {
       map["attachLink"] = attachLink;
     }
     if (text != null) {
-      map['text'] = Encreption.encreptAES(text) ?? '';
+      map['text'] = Encreption.encreptAES(text!.trim()) ?? '';
     }
     map['senderTo'] = senderTo;
     map['roomId'] = roomId;

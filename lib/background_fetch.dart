@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:background_fetch/background_fetch.dart';
+import 'package:chat/constants.dart';
+import 'package:chat/encreption.dart';
 import 'package:chat/models/User.dart';
 import 'package:chat/notification.dart';
-import 'package:chat/socket.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> initPlatformState() async {
@@ -13,7 +14,7 @@ Future<void> initPlatformState() async {
     await BackgroundFetch.configure(
         BackgroundFetchConfig(
           minimumFetchInterval: 1,
-          startOnBoot: true,
+          startOnBoot: false,
           stopOnTerminate: false,
           enableHeadless: true,
           requiresBatteryNotLow: false,
@@ -29,7 +30,7 @@ Future<void> initPlatformState() async {
       delay: 1,
       periodic: true,
       forceAlarmManager: true,
-      startOnBoot: true,
+      startOnBoot: false,
       stopOnTerminate: false,
       enableHeadless: true,
       requiresBatteryNotLow: false,
@@ -57,33 +58,56 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 }
 
 void onBackgroundFetch(String taskId) async {
-// if reciever
   if (taskId == 'com.example.chat') {
-    if (!Socket().socket.connected) {
-      print("dsadsd");
-      Socket().socket.connect();
-    }
-    Socket().socket.on('NewMessage', (data) async {
-      final msg = data['message'];
+    if (!getValue('online')) {
       final prfs = await SharedPreferences.getInstance();
       final userGetter = prfs.get('user');
       User? user = userGetter != null
           ? User.fromJson(jsonDecode(userGetter.toString()))
           : null;
-      if (msg['senderTo'] == user!.id) {
-        var count = data['count'];
 
-        if (count > 0) {
-          FlutterAppBadger.updateBadgeCount(count);
-        } else {
-          FlutterAppBadger.removeBadge();
-        }
-
-        await notificationPlugin.showNotification(count, data['recieverName'],
-            msg['text'] ?? msg['attachLink'], msg['roomId']);
+      final dio = new Dio();
+      final res = await dio.get('http://192.168.1.12:3000/messages/${user!.id}',
+          options: Options(responseType: ResponseType.json));
+      if ([200, 201].contains(res.statusCode)) {
+        res.data.forEach((e) async {
+          await notificationPlugin.showNotification(res.data.indexOf(e),
+              e['senderName'], Encreption.decreptAES(e['text']), e['roomId']);
+        });
       }
-    });
+    }
   }
+  // if reciever
+  //if (taskId == 'com.example.chat') {
+  //await notificationPlugin.showNotification(
+  //  1, "data['recieverName']", "sadajl", "msg['roomId']");
+  // if (!Socket().socket.connected) {
+  //   Socket().socket.connect();
+  //   Socket().socket.on('NewMessage', (data) async {
+  //     final msg = data['message'];
+  //     final prfs = await SharedPreferences.getInstance();
+  //     final userGetter = prfs.get('user');
+  //     User? user = userGetter != null
+  //         ? User.fromJson(jsonDecode(userGetter.toString()))
+  //         : null;
+  //     if (msg['senderTo'] == user!.id) {
+  //       var count = data['count'];
+
+  //       if (count > 0) {
+  //         FlutterAppBadger.updateBadgeCount(count);
+  //       } else {
+  //         FlutterAppBadger.removeBadge();
+  //       }
+
+  //       await notificationPlugin.showNotification(
+  //           count,
+  //           data['recieverName'],
+  //           Encreption.decreptAES(msg['text']) ?? msg['attachLink'],
+  //           msg['roomId']);
+  //     }
+  //   });
+  // }
+  //}
 
   BackgroundFetch.finish(taskId);
 }

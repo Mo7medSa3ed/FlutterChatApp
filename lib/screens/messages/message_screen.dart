@@ -89,7 +89,7 @@ class MessagesScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 12),
                       )
                     : Text(
-                        "Last seen ${dateTimeFormat(chatUser.lastSeen)} ",
+                      chatUser.lastSeen!=null?  "Last seen ${dateTimeFormat(chatUser.lastSeen)} ":'',
                         style: TextStyle(fontSize: 12),
                       );
               })

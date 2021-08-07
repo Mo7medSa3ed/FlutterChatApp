@@ -193,6 +193,7 @@ class API {
             Socket().socket.connect();
           }
           Socket().emitOnline(res.data['_id']);
+        
           Navigator.of(context).pop();
         } else {
           Navigator.of(context).pop();
@@ -279,6 +280,7 @@ class API {
       return Future.value(null);
     }
   }
+
 
   Future<dynamic>? sendMsg(msg) async {
     final uid = Provider.of<AppProvider>(context, listen: false).user!.id;

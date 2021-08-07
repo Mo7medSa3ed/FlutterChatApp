@@ -29,7 +29,11 @@ class _ChatsScreenState extends State<ChatsScreen> {
   onNotificationInlowerVersions(ReceivedNotification receivedNotification) {}
 
   Future onNotificationClick(String payload) async {
-    goTo(context, MessagesScreen(User(), payload));
+    print(payload);
+   final id = payload.split('/').first;
+   final pro =  Provider.of<AppProvider>(context,listen: false);
+   final idx = pro.roomList!.indexWhere((e) =>e.id.toString() == id);
+    goTo(context, MessagesScreen(idx!=-1?pro.roomList![idx].reciverId!:User() , id));
   }
 
   @override

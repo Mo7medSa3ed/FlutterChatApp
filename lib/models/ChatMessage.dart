@@ -27,7 +27,7 @@ class ChatMessage {
   });
 
   factory ChatMessage.fromJson(json, sender) => ChatMessage(
-      text:Encreption.decreptAES( json['text']),
+      text: json['text']!=null? Encreption.decreptAES( json['text'].trim()):'',
       id: json['_id'],
       roomId: json['roomId'],
       senderTo: json['senderTo'],

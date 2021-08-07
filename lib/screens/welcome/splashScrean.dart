@@ -10,8 +10,10 @@ import 'package:chat/screens/signinOrSignUp/signin_or_signup_screen.dart';
 import 'package:chat/screens/welcome/welcome_screen.dart';
 import 'package:chat/socket.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity/connectivity.dart';
 
 class SplashScrean extends StatefulWidget {
   const SplashScrean({Key? key}) : super(key: key);
@@ -21,9 +23,45 @@ class SplashScrean extends StatefulWidget {
 }
 
 class _SplashScreanState extends State<SplashScrean> {
+  var subscription;
   @override
   void initState() {
-    check();
+    Connectivity().checkConnectivity().then((value) {
+      if (value != ConnectivityResult.none) {
+        check();
+      } else {
+        Fluttertoast.showToast(
+            msg: 'No Internet Connection',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            backgroundColor: kErrorColor,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    });
+
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result != ConnectivityResult.none) {
+        Fluttertoast.showToast(
+            msg: 'Online',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            backgroundColor: kPrimaryColor,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        check();
+      } else {
+        Fluttertoast.showToast(
+            msg: 'No Internet Connection',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            backgroundColor: kErrorColor,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    });
 
     super.initState();
   }
@@ -31,7 +69,11 @@ class _SplashScreanState extends State<SplashScrean> {
   onNotificationInlowerVersions(ReceivedNotification receivedNotification) {}
 
   Future onNotificationClick(String payload) async {
-    goTo(context, MessagesScreen(User(), payload));
+    final id = payload.split('/').first;
+    final pro = Provider.of<AppProvider>(context, listen: false);
+    final idx = pro.roomList!.indexWhere((e) => e.id.toString() == id);
+    goTo(context,
+        MessagesScreen(idx != -1 ? pro.roomList![idx].reciverId! : User(), id));
   }
 
   getRoom() async {
@@ -74,6 +116,12 @@ class _SplashScreanState extends State<SplashScrean> {
         goToWithRemoveUntill(context, SigninOrSignupScreen());
       }
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subscription.cancel();
   }
 
   @override

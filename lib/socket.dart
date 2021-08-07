@@ -1,3 +1,4 @@
+import 'package:chat/constants.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class Socket {
@@ -7,10 +8,12 @@ class Socket {
   });
 
   emitOnline(data) {
+    setBoolValue('online', true);
     socket.emit('onlineUser', data);
   }
 
   emitDisonline(data) {
+    setBoolValue('online', false);
     socket.emit('disonlineUser', data);
   }
 

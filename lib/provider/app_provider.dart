@@ -56,6 +56,14 @@ class AppProvider extends ChangeNotifier {
       }
     }
   }
+  changeUserImage(user) {
+    roomList!.forEach((e) {
+      if (e.reciverId!.id ==user!.id){
+        e.reciverId = user;
+      }
+    });
+    notifyListeners();
+  }
 
   changeUserStatusForRoom(User data) {
     (roomList ?? []).forEach((e) {
@@ -96,7 +104,7 @@ class AppProvider extends ChangeNotifier {
         await notificationPlugin.showNotification(
             chatList.length,
             roomList![idx].reciverId!.name,
-            chat.text ?? chat.attachLink,
+           chat.text ?? chat.attachLink,
             chat.roomId);
       }
     }

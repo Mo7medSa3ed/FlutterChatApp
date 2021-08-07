@@ -107,7 +107,7 @@ class NotificationPlugin {
 
     await flutterLocalNotificationsPlugin!.show(
         id, title, body, platformChannel,
-        payload: payload + id.toString());
+        payload: payload +'/'+ id.toString());
   }
 }
 
