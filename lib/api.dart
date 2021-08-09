@@ -193,7 +193,7 @@ class API {
             Socket().socket.connect();
           }
           Socket().emitOnline(res.data['_id']);
-        
+
           Navigator.of(context).pop();
         } else {
           Navigator.of(context).pop();
@@ -262,10 +262,14 @@ class API {
       final res = await dio.get('$baseURL/messages/$roomId/$page',
           options: Options(responseType: ResponseType.json));
       if ([200, 201].contains(res.statusCode)) {
-        List<ChatMessage> data = res.data
-            .map<ChatMessage>(
-                (e) => ChatMessage.fromJson(e, e['senderTo'] != uid))
-            .toList();
+        List<ChatMessage> data = [];
+
+        for (var e in res.data) {
+          if (e['attachLink'] != null && e['type'] != 'text')
+            await download(e['attachLink'], e['type']);
+          data.add(ChatMessage.fromJson(e, e['senderTo'] != uid));
+        }
+
         if (page == 1)
           Provider.of<AppProvider>(context, listen: false).chatList.clear();
         Provider.of<AppProvider>(context, listen: false).initChatList(data);
@@ -281,7 +285,6 @@ class API {
     }
   }
 
-
   Future<dynamic>? sendMsg(msg) async {
     final uid = Provider.of<AppProvider>(context, listen: false).user!.id;
     try {
@@ -289,7 +292,7 @@ class API {
 
       final res = await dio.post('$baseURL/messages/$uid',
           data: msg, options: Options(responseType: ResponseType.json));
-print(res.data);
+
       if ([200, 201].contains(res.statusCode)) {
         ChatMessage data = ChatMessage.fromJson(res.data, true);
         Provider.of<AppProvider>(context, listen: false).addMsgTochat(data);

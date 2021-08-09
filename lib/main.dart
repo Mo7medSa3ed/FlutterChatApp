@@ -1,4 +1,3 @@
-
 import 'package:background_fetch/background_fetch.dart';
 import 'package:chat/background_fetch.dart';
 import 'package:chat/models/ChatMessage.dart';
@@ -45,7 +44,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       final pro = Provider.of<AppProvider>(context, listen: false);
       pro.changeUserStatus(data);
     });
-    
+
     Socket().socket.on('changeImageForUser', (data) {
       final pro = Provider.of<AppProvider>(context, listen: false);
       pro.changeUserImage(User.fromJson(data));
@@ -66,8 +65,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         provider.addMsgTochat(newMsg);
       }
     });
-   
+
     initPlatformState();
+
     super.initState();
   }
 

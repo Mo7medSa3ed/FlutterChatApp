@@ -20,6 +20,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
   @override
   void initState() {
+    notificationPlugin.clearAllNotification();
     notificationPlugin
         .setListnerForLowerVersions(onNotificationInlowerVersions);
     notificationPlugin.setOnNotificationClick(onNotificationClick);
@@ -30,10 +31,11 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
   Future onNotificationClick(String payload) async {
     print(payload);
-   final id = payload.split('/').first;
-   final pro =  Provider.of<AppProvider>(context,listen: false);
-   final idx = pro.roomList!.indexWhere((e) =>e.id.toString() == id);
-    goTo(context, MessagesScreen(idx!=-1?pro.roomList![idx].reciverId!:User() , id));
+    final id = payload.split('/').first;
+    final pro = Provider.of<AppProvider>(context, listen: false);
+    final idx = pro.roomList!.indexWhere((e) => e.id.toString() == id);
+    goTo(context,
+        MessagesScreen(idx != -1 ? pro.roomList![idx].reciverId! : User(), id));
   }
 
   @override

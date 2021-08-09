@@ -281,7 +281,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           final data = Message(
                               roomId: rid,
                               senderTo: "${widget.senderToId}",
-                              text: url !=null ?'record':textController.text.trim(),
+                              text: url != null
+                                  ? 'record'
+                                  : textController.text.trim(),
                               type: url != null ? 'record' : 'text',
                               attachLink: url);
 
@@ -353,6 +355,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         final data = Message(
                             roomId: rid,
                             senderTo: "${widget.senderToId}",
+                            text: res != null
+                                ? 'image'
+                                : textController.text.trim(),
                             type: 'image',
                             attachLink: res);
 
@@ -383,6 +388,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         final data = Message(
                             roomId: rid,
                             senderTo: "${widget.senderToId}",
+                            text: res != null
+                                ? 'image'
+                                : textController.text.trim(),
                             type: 'image',
                             attachLink: res ?? '');
 
@@ -419,6 +427,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           final data = Message(
                               roomId: rid,
                               senderTo: "${widget.senderToId}",
+                              text: res != null
+                                  ? 'audio'
+                                  : textController.text.trim(),
                               type: 'audio',
                               attachLink: res ?? '');
 
@@ -450,7 +461,10 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         final data = Message(
                             roomId: rid,
                             senderTo: "${widget.senderToId}",
-                            type: 'image',
+                            text: res != null
+                                ? 'video'
+                                : textController.text.trim(),
+                            type: 'video',
                             attachLink: res ?? '');
 
                         await API(context).sendMsg(data.toJson());
@@ -480,7 +494,10 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         final data = Message(
                             roomId: rid,
                             senderTo: "${widget.senderToId}",
-                            type: 'image',
+                            text: res != null
+                                ? 'video'
+                                : textController.text.trim(),
+                            type: 'video',
                             attachLink: res ?? '');
 
                         await API(context).sendMsg(data.toJson());

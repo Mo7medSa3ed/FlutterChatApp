@@ -1,6 +1,7 @@
 import 'package:chat/models/ChatMessage.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoMessage extends StatefulWidget {
@@ -33,6 +34,27 @@ class _VideoMessageState extends State<VideoMessage> {
 
   @override
   Widget build(BuildContext context) {
-    return FlickVideoPlayer(flickManager: flickManager!);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: widget.message!.isSender
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.end,
+      children: [
+        FlickVideoPlayer(flickManager: flickManager!),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+          child: Text(
+            DateFormat('h:mm a')
+                .format(DateTime.parse(widget.message!.createdAt.toString())),
+            style: TextStyle(
+              fontSize: 10,
+              color: widget.message!.isSender
+                  ? Colors.white
+                  : Theme.of(context).textTheme.bodyText1!.color,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

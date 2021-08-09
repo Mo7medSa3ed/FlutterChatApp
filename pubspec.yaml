@@ -46,7 +46,8 @@ dependencies:
   fluttertoast:
   connectivity:
   delayed_display:
-  encrypt:  
+  encrypt:
+  ext_storage:  
   audioplayers: ^0.19.1
   background_fetch:
   flutter_app_badger:

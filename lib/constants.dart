@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const kPrimaryColor = Color(0xFF00BF6D);
@@ -76,4 +80,17 @@ dateTimeFormat(date) {
   return DateFormat.yMEd().format(DateTime.parse(date)) +
       " " +
       DateFormat.Hm().format(DateTime.parse(date)).toString();
+}
+
+download(String url, type) async {
+  if (url != null && type != 'text') {
+    final folderName = "Chaty";
+    var dir = await getExternalStorageDirectory();
+    final path =
+        Directory("${dir!.path}/$folderName/${type}s/${url.split('/').last}");
+    if (!(await path.exists())) {
+      await Dio().download(url, path.path);
+    }
+  }
+  return Future.value(url);
 }

@@ -62,6 +62,10 @@ class NotificationPlugin {
     });
   }
 
+  clearAllNotification() {
+    flutterLocalNotificationsPlugin!.cancelAll();
+  }
+
   Future<void> showNotification(id, title, body, payload) async {
     // var image =
     //     "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg";
@@ -107,7 +111,7 @@ class NotificationPlugin {
 
     await flutterLocalNotificationsPlugin!.show(
         id, title, body, platformChannel,
-        payload: payload +'/'+ id.toString());
+        payload: payload + '/' + id.toString());
   }
 }
 

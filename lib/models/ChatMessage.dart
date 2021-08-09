@@ -1,3 +1,4 @@
+import 'package:chat/constants.dart';
 import 'package:chat/encreption.dart';
 
 enum ChatMessageType { text, audio, image, video, document, record }
@@ -27,11 +28,13 @@ class ChatMessage {
   });
 
   factory ChatMessage.fromJson(json, sender) => ChatMessage(
-      text: json['text']!=null? Encreption.decreptAES( json['text'].trim()):'',
+      text: json['text'] != null
+          ? Encreption.decreptAES(json['text'].trim())
+          : '',
       id: json['_id'],
       roomId: json['roomId'],
       senderTo: json['senderTo'],
-      createdAt: json['ceatedAt'],
+      createdAt: json['createdAt'],
       attachLink: json['attachLink'],
       messageType: msgTypeReturn(json['type']),
       messageStatus: MessageStatus.viewed,
@@ -39,7 +42,6 @@ class ChatMessage {
 }
 
 msgTypeReturn(type) {
-  print(type);
   if (type == 'text') {
     return ChatMessageType.text;
   } else if (type == 'record') {

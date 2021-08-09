@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:chat/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../constants.dart';
 
 class AudioMessage extends StatefulWidget {
@@ -102,64 +103,87 @@ class _AudioMessageState extends State<AudioMessage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        padding: EdgeInsets.symmetric(
-          horizontal: kDefaultPadding * 0.75,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: kPrimaryColor.withOpacity(widget.message!.isSender ? 1 : 0.1),
-        ),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              IconButton(
-                  iconSize: 50,
-                  onPressed: () {
-                    audioPlayerState == PlayerState.PLAYING
-                        ? pauseMusic()
-                        : playMusic();
-                  },
-                  icon: Icon(
-                    audioPlayerState == PlayerState.PLAYING
-                        ? Icons.pause_rounded
-                        : Icons.play_arrow_rounded,
-                    color: audioPlayerState != PlayerState.PAUSED
-                        ? !widget.message!.isSender
-                            ? kPrimaryColor
-                            : kContentColorLightTheme
-                        : kContentColorDarkTheme,
-                  )),
-              Expanded(
-                  child: Column(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: widget.message!.isSender
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.end,
+      children: [
+        Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            padding: EdgeInsets.symmetric(
+              horizontal: kDefaultPadding * 0.75,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color:
+                  kPrimaryColor.withOpacity(widget.message!.isSender ? 1 : 0.1),
+            ),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  slider(),
-                  Container(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 8,
+                  IconButton(
+                      iconSize: 40,
+                      onPressed: () {
+                        audioPlayerState == PlayerState.PLAYING
+                            ? pauseMusic()
+                            : playMusic();
+                      },
+                      icon: Icon(
+                        audioPlayerState == PlayerState.PLAYING
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded,
+                        color: audioPlayerState != PlayerState.PAUSED
+                            ? !widget.message!.isSender
+                                ? kPrimaryColor
+                                : kContentColorLightTheme
+                            : kContentColorDarkTheme,
+                      )),
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      slider(),
+                      Container(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(getTimeString((timeProgress / 1000).toInt())),
+                            Spacer(),
+                            Text(getTimeString((audioDuration / 1000).toInt())),
+                            SizedBox(
+                              width: 8,
+                            ),
+                          ],
                         ),
-                        Text(getTimeString((timeProgress / 1000).toInt())),
-                        Spacer(),
-                        Text(getTimeString((audioDuration / 1000).toInt())),
-                        SizedBox(
-                          width: 8,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                ],
-              ))
-            ]));
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                    ],
+                  ))
+                ])),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+          child: Text(
+            DateFormat('h:mm a')
+                .format(DateTime.parse(widget.message!.createdAt.toString())),
+            style: TextStyle(
+              fontSize: 10,
+              color: widget.message!.isSender
+                  ? Colors.white
+                  : Theme.of(context).textTheme.bodyText1!.color,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

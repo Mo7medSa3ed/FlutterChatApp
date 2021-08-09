@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:background_fetch/background_fetch.dart';
-import 'package:chat/constants.dart';
 import 'package:chat/encreption.dart';
 import 'package:chat/models/User.dart';
 import 'package:chat/notification.dart';
@@ -59,26 +58,30 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 
 void onBackgroundFetch(String taskId) async {
   if (taskId == 'com.example.chat') {
-     final prfs = await SharedPreferences.getInstance();
+    final prfs = await SharedPreferences.getInstance();
     final userGetter = prfs.get('user');
     User? user = userGetter != null
         ? User.fromJson(jsonDecode(userGetter.toString()))
         : null;
-    if (!(user!.online??false)) {
+    if (!(user!.online ?? false)) {
       final prfs = await SharedPreferences.getInstance();
       final userGetter = prfs.get('user');
       User? user = userGetter != null
           ? User.fromJson(jsonDecode(userGetter.toString()))
           : null;
+      bool online = prfs.getBool('online') ?? false;
 
-      final dio = new Dio();
-      final res = await dio.get('https://chatserver1235.herokuapp.com/messages/${user!.id}',
-          options: Options(responseType: ResponseType.json));
-      if ([200, 201].contains(res.statusCode)) {
-        res.data.forEach((e) async {
-          await notificationPlugin.showNotification(res.data.indexOf(e),
-              e['senderName'], Encreption.decreptAES(e['text']), e['roomId']);
-        });
+      if (!(online)) {
+        final dio = new Dio();
+        final res = await dio.get(
+            'https://chatserver1235.herokuapp.com/messages/${user!.id}',
+            options: Options(responseType: ResponseType.json));
+        if ([200, 201].contains(res.statusCode)) {
+          res.data.forEach((e) async {
+            await notificationPlugin.showNotification(res.data.indexOf(e),
+                e['senderName'], Encreption.decreptAES(e['text']), e['roomId']);
+          });
+        }
       }
     }
   }

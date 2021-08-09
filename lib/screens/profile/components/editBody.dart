@@ -1,9 +1,11 @@
 import 'package:chat/api.dart';
 import 'package:chat/components/primary_button.dart';
+import 'package:chat/config/upload.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/models/User.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:chat/screens/auth/components/primaryField.dart';
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +23,7 @@ class _EditBodyState extends State<EditBody> {
   final passController = TextEditingController(text: '');
   final formKey = GlobalKey<FormState>();
 
-  XFile? picked;
+  String? imgUrl;
 
   @override
   void initState() {
@@ -55,7 +57,7 @@ class _EditBodyState extends State<EditBody> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: NetworkImage(user.img ?? img))),
+                              image: NetworkImage(imgUrl ?? user.img! ?? img))),
                     ),
                     Align(
                         alignment: Alignment.center,
@@ -69,16 +71,15 @@ class _EditBodyState extends State<EditBody> {
                           child: IconButton(
                               iconSize: kDefaultPadding * 2,
                               onPressed: () async {
-                                picked = await ImagePicker()
+                                await ImagePicker()
                                     .pickImage(source: ImageSource.gallery)
                                     .then((value) async {
                                   if (value != null) {
-                                   await API(context)
-                                        .changeUserImage(value, user.id);
+                                    final res = await Cloud.upload(value);
+                                    if (res != null) imgUrl = res;
+                                    setState(() {});
                                   }
-                                  return null;
                                 });
-                                setState(() {});
                               },
                               icon: Icon(Icons.camera_alt)),
                         )),
@@ -115,6 +116,7 @@ class _EditBodyState extends State<EditBody> {
                       User updatedUser = User(
                           id: user.id,
                           name: nameController.text.trim(),
+                          img: imgUrl,
                           phone: phoneController.text.trim(),
                           password: passController.text.trim());
                       await API(context).editUser(updatedUser);

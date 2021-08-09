@@ -37,5 +37,6 @@ class User {
         'name': name,
         'phone': phone,
         'password': password,
+        if(img!=null) "img":img
       };
 }
