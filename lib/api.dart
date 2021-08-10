@@ -10,7 +10,6 @@ import 'package:chat/screens/signinOrSignUp/signin_or_signup_screen.dart';
 import 'package:chat/socket.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class API {
