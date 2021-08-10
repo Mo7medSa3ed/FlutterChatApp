@@ -120,7 +120,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       child: MaterialApp(
         title: 'Chat App',
         debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.dark,
         theme: lightThemeData(context),
         darkTheme: darkThemeData(context),
         home: SplashScrean(),
