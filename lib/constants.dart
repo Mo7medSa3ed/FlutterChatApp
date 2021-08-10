@@ -16,7 +16,7 @@ const kErrorColor = Color(0xFFF03738);
 const kDefaultPadding = 16.0;
 
 const img =
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80";
+    "https://www.clipartkey.com/mpngs/m/301-3011907_profile-image-placeholder-circle-png.png";
 
 goTo(context, screan) {
   print("Go to second screan");
@@ -41,6 +41,27 @@ getValue(key) async {
 setValue(key, value) async {
   final prfs = await SharedPreferences.getInstance();
   return prfs.setString(key, value);
+}
+
+saveMsgIdForPrfs(value) async {
+  final prfs = await SharedPreferences.getInstance();
+  var list = prfs.getStringList('unread') ?? [];
+  list.add(value.toString());
+  await prfs.setStringList('unread', list);
+}
+
+removeMsgIdForPrfs(unreadList) async {
+  final prfs = await SharedPreferences.getInstance();
+  var list = prfs.getStringList('unread') ?? [];
+  unreadList.forEach((e) => list.remove(e));
+  await prfs.setStringList('unread', list);
+}
+
+isContain(id) async {
+  final prfs = await SharedPreferences.getInstance();
+  var list = prfs.getStringList('unread') ?? [];
+
+  return list.contains(id);
 }
 
 setBoolValue(key, value) async {
@@ -83,7 +104,7 @@ dateTimeFormat(date) {
 }
 
 download(String url, type) async {
-  if (url != null && type != 'text') {
+  if (url.isNotEmpty && type != 'text') {
     final folderName = "Chaty";
     var dir = await getExternalStorageDirectory();
     final path =

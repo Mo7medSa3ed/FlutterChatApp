@@ -4,19 +4,21 @@ import 'package:chat/models/message.dart';
 class Room {
   List<Message>? messages;
   bool? isOpen;
+  bool? open;
   String? id;
   User? reciverId;
   User? userId;
   String? createdAt;
   String? updatedAt;
   Message? lastMessage;
-  int? msgCount =-1;
+  int? msgCount = 0;
   String? recieverStatus;
 
   Room(
       {this.createdAt,
       this.id,
       this.isOpen,
+      this.open,
       this.lastMessage,
       this.messages,
       this.msgCount,
@@ -31,7 +33,8 @@ class Room {
                 .map<Message>((e) => Message.fromJson(e))
                 .toList())
             : [],
-        isOpen: isOpen ?? json['isOpen'],
+        isOpen: false,
+        open: false,
         id: json['_id'],
         reciverId: User.fromJson(json['reciverId']),
         userId: User.fromJson(json['userId']),

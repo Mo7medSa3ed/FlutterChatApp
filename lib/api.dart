@@ -171,20 +171,14 @@ class API {
     }
   }
 
-  changeUserImage(XFile file, id) async {
+  changeUserImage(id, img) async {
     try {
       showLoading(context);
 
-      FormData formData = FormData.fromMap({
-        "img": await MultipartFile.fromFile(file.path,
-            filename: '${file.name.split('/').last}')
-      });
-      new Dio()
-          .post(
-        "$baseURL/users/upload/$id",
-        data: formData,
-      )
-          .then((res) {
+      new Dio().patch(
+        "$baseURL/users/changeImage/$id",
+        data: {img: img},
+      ).then((res) {
         if ([200, 201].contains(res.statusCode)) {
           final provider = Provider.of<AppProvider>(context, listen: false);
           provider.initUser(User.fromJson(res.data));
@@ -257,17 +251,22 @@ class API {
 
   Future<dynamic>? getAllMessages(roomId, page) async {
     final uid = Provider.of<AppProvider>(context, listen: false).user!.id;
+
     try {
       final dio = new Dio();
       final res = await dio.get('$baseURL/messages/$roomId/$page',
           options: Options(responseType: ResponseType.json));
+
       if ([200, 201].contains(res.statusCode)) {
         List<ChatMessage> data = [];
 
         for (var e in res.data) {
           if (e['attachLink'] != null && e['type'] != 'text')
             await download(e['attachLink'], e['type']);
-          data.add(ChatMessage.fromJson(e, e['senderTo'] != uid));
+          var contain = await isContain(e['_id']);
+          print(contain);
+          data.add(ChatMessage.fromJson(e, e['senderTo'] != uid,
+              iscontain: contain));
         }
 
         if (page == 1)

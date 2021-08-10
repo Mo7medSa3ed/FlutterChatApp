@@ -33,7 +33,7 @@ class NotificationPlugin {
   }
 
   void initializePlatformSpecifics() {
-    var initializeSettingAndroid = AndroidInitializationSettings('logo');
+    var initializeSettingAndroid = AndroidInitializationSettings('icon');
     var initializeSettingIOS = IOSInitializationSettings(
         requestSoundPermission: true,
         requestBadgePermission: true,

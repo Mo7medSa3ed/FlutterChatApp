@@ -1,3 +1,4 @@
+import 'package:chat/api.dart';
 import 'package:chat/components/filled_outline_button.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/models/room.dart';
@@ -43,9 +44,16 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
     });
   }
 
+  getRooms() async {
+    final provider = Provider.of<AppProvider>(context, listen: false);
+
+    final id = provider.user?.id;
+    await API(context).getAllChats(id);
+  }
+
   @override
   void dispose() {
-    //controller!.dispose();
+    // controller!.dispose();
     super.dispose();
   }
 
@@ -77,6 +85,8 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                             isFilled: pressed,
                             press: () {
                               filteredChats = chats;
+                              filteredChats!.sort((a, b) =>
+                                  b.createdAt!.compareTo(a.createdAt!));
                               pressed = true;
                               setState(() {});
                             },
@@ -86,8 +96,9 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
                           isFilled: !pressed,
                           press: () {
                             var filtered = chats!
-                                .where((e) =>
-                                    e.reciverId!.online! || e.userId!.online!)
+                                .where((e) => ((e.reciverId!.online! &&
+                                        e.reciverId!.id != uid) ||
+                                    (e.userId!.online! && e.userId!.id != uid)))
                                 .toList();
 
                             filteredChats = filtered;

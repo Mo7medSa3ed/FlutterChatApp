@@ -38,7 +38,7 @@ class Alert {
         showCancelBtn: true,
         title: 'Delete Chat',
         text: "Are you sure to delete this chat ?",
-        confirmBtnColor: kPrimaryColor,
+        confirmBtnColor: kErrorColor,
         onConfirmBtnTap: confirm);
   }
 }

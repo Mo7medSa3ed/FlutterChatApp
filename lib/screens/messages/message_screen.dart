@@ -1,5 +1,6 @@
 import 'package:chat/constants.dart';
 import 'package:chat/models/User.dart';
+import 'package:chat/notification.dart';
 import 'package:chat/provider/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,6 @@ class MessagesScreen extends StatelessWidget {
       if (idx != -1) {
         pro.roomList![idx].isOpen = value;
         pro.roomList![idx].msgCount = 0;
-
         if (chatUser.id == null) {
           chatUser = pro.roomList![idx].reciverId;
         }
@@ -29,6 +29,7 @@ class MessagesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    notificationPlugin.clearAllNotification();
     pro = Provider.of<AppProvider>(context, listen: false);
     openRoom(context, true);
     return WillPopScope(
@@ -81,7 +82,7 @@ class MessagesScreen extends StatelessWidget {
 
                 return chatUser.online ?? false
                     ? Text(
-                        app.roomList!.length > 0
+                        (app.roomList!.length > 0 && idx != -1)
                             ? app.roomList![idx].recieverStatus != null
                                 ? app.roomList![idx].recieverStatus!
                                 : "online"
@@ -89,7 +90,9 @@ class MessagesScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 12),
                       )
                     : Text(
-                      chatUser.lastSeen!=null?  "Last seen ${dateTimeFormat(chatUser.lastSeen)} ":'',
+                        chatUser.lastSeen != null
+                            ? "Last seen ${dateTimeFormat(chatUser.lastSeen)} "
+                            : '',
                         style: TextStyle(fontSize: 12),
                       );
               })

@@ -20,6 +20,9 @@ class Socket {
   emitChangeStatus(data) {
     socket.emit('changeStatus', data);
   }
+  emitlastOPenForRoom(data) {
+    socket.emit('openRoom', data);
+  }
 
   
 

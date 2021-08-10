@@ -13,7 +13,7 @@ Future<void> initPlatformState() async {
     await BackgroundFetch.configure(
         BackgroundFetchConfig(
           minimumFetchInterval: 1,
-          startOnBoot: false,
+          startOnBoot: true,
           stopOnTerminate: false,
           enableHeadless: true,
           requiresBatteryNotLow: false,
@@ -29,7 +29,7 @@ Future<void> initPlatformState() async {
       delay: 1,
       periodic: true,
       forceAlarmManager: true,
-      startOnBoot: false,
+      startOnBoot: true,
       stopOnTerminate: false,
       enableHeadless: true,
       requiresBatteryNotLow: false,
@@ -63,25 +63,18 @@ void onBackgroundFetch(String taskId) async {
     User? user = userGetter != null
         ? User.fromJson(jsonDecode(userGetter.toString()))
         : null;
-    if (!(user!.online ?? false)) {
-      final prfs = await SharedPreferences.getInstance();
-      final userGetter = prfs.get('user');
-      User? user = userGetter != null
-          ? User.fromJson(jsonDecode(userGetter.toString()))
-          : null;
-      bool online = prfs.getBool('online') ?? false;
+    bool online = prfs.getBool('online') ?? false;
 
-      if (!(online)) {
-        final dio = new Dio();
-        final res = await dio.get(
-            'https://chatserver1235.herokuapp.com/messages/${user!.id}',
-            options: Options(responseType: ResponseType.json));
-        if ([200, 201].contains(res.statusCode)) {
-          res.data.forEach((e) async {
-            await notificationPlugin.showNotification(res.data.indexOf(e),
-                e['senderName'], Encreption.decreptAES(e['text']), e['roomId']);
-          });
-        }
+    if (online==false) {
+      final dio = new Dio();
+      final res = await dio.get(
+          'https://chatserver1235.herokuapp.com/messages/${user!.id}',
+          options: Options(responseType: ResponseType.json));
+      if ([200, 201].contains(res.statusCode)) {
+        res.data.forEach((e) async {
+          await notificationPlugin.showNotification(res.data.indexOf(e),
+              e['senderName'], Encreption.decreptAES(e['text']), e['roomId']);
+        });
       }
     }
   }

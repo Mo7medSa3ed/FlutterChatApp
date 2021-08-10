@@ -66,6 +66,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       }
     });
 
+    Socket().socket.on('deleteRoom', (data) async {
+      final provider = Provider.of<AppProvider>(context, listen: false);
+      provider.deleteRoom(data['id']);
+    });
+
+    Socket().socket.on('changeLastOpen', (data) async {
+      final provider = Provider.of<AppProvider>(context, listen: false);
+      if (data['senderId'] != provider.user!.id) {
+        provider.changStatusForMessages(data);
+      }
+    });
+
     initPlatformState();
 
     super.initState();

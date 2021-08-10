@@ -47,6 +47,11 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  clearChatList() {
+    chatList.clear();
+    notifyListeners();
+  }
+
   changeUserStatus(data) {
     final idx = roomList!.indexWhere((e) => e.id == data['roomId']);
     if (idx != -1) {
@@ -56,9 +61,10 @@ class AppProvider extends ChangeNotifier {
       }
     }
   }
+
   changeUserImage(user) {
     roomList!.forEach((e) {
-      if (e.reciverId!.id ==user!.id){
+      if (e.reciverId!.id == user!.id) {
         e.reciverId = user;
       }
     });
@@ -78,14 +84,6 @@ class AppProvider extends ChangeNotifier {
 
   addMsgTochat(ChatMessage chat) async {
     bool read = false;
-    if (chatList.length > 0) {
-      read = (chat.roomId == chatList[0].roomId);
-      if (read) {
-        chatList.insert(0, chat);
-      }
-    } else {
-      chatList.insert(0, chat);
-    }
     final idx = roomList!.indexWhere((e) => e.id == chat.roomId);
     if (idx != -1) {
       roomList![idx].lastMessage = Message(
@@ -96,15 +94,31 @@ class AppProvider extends ChangeNotifier {
           isRead: roomList![idx].isOpen!,
           text: chat.text);
 
+      final bool open = roomList![idx].open!;
+      chat.messageStatus = open ? MessageStatus.viewed : MessageStatus.not_view;
+      if (open == false) {
+        saveMsgIdForPrfs(chat.id);
+      }
+      if (chatList.length > 0) {
+        read = (chat.roomId == chatList[0].roomId);
+        if (read) {
+          chatList.insert(0, chat);
+        }
+      } else {
+        chatList.insert(0, chat);
+      }
       if (roomList![idx].isOpen!) {
         roomList![idx].msgCount = 0;
       } else {
-        roomList![idx].msgCount = roomList![idx].msgCount! + 1;
-
+        if (chatList.length == 1 && roomList![idx].msgCount! < 1) {
+          roomList![idx].msgCount = 1;
+        } else {
+          roomList![idx].msgCount = roomList![idx].msgCount! + 1;
+        }
         await notificationPlugin.showNotification(
             chatList.length,
             roomList![idx].reciverId!.name,
-           chat.text ?? chat.attachLink,
+            chat.text ?? chat.attachLink,
             chat.roomId);
       }
     }
@@ -133,5 +147,25 @@ class AppProvider extends ChangeNotifier {
     }
   }
 
-  getChatList() => chatList;
+  changStatusForMessages(data) async {
+    roomList!.firstWhere((e) => e.id == data['id']).open = data['open'];
+    print(data);
+    var unredList = [];
+    if (chatList.length > 0) {
+      if (chatList[0].roomId == data['id']) {
+        chatList.forEach((e) {
+          if (data['open']) {
+            if (e.messageStatus == MessageStatus.not_view) {
+              unredList.add(e.id);
+              e.messageStatus = MessageStatus.viewed;
+            }
+          }
+        });
+        await removeMsgIdForPrfs(unredList);
+      }
+    }
+    notifyListeners();
+  }
+
+  getChatList() => [...chatList];
 }

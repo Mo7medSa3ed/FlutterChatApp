@@ -79,6 +79,7 @@ class _PeopleBodyState extends State<PeopleBody> {
                           return;
                         }
                       });
+                     
                       Navigator.push(
                         context,
                         MaterialPageRoute(

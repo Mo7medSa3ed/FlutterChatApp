@@ -34,9 +34,9 @@ class User {
       );
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'phone': phone,
-        'password': password,
-        if(img!=null) "img":img
+        if (img != null) "img": img,
+        if (name != null) "name": name,
+        if (phone != null) "phone": phone,
+        if (password != null) "password": password
       };
 }

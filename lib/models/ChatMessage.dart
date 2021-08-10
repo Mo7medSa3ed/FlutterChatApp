@@ -27,18 +27,25 @@ class ChatMessage {
     this.isSender = false,
   });
 
-  factory ChatMessage.fromJson(json, sender) => ChatMessage(
-      text: json['text'] != null
-          ? Encreption.decreptAES(json['text'].trim())
-          : '',
-      id: json['_id'],
-      roomId: json['roomId'],
-      senderTo: json['senderTo'],
-      createdAt: json['createdAt'],
-      attachLink: json['attachLink'],
-      messageType: msgTypeReturn(json['type']),
-      messageStatus: MessageStatus.viewed,
-      isSender: sender);
+  factory ChatMessage.fromJson(
+    json,
+    sender,
+    {iscontain}
+  ) =>
+      ChatMessage(
+          text: json['text'] != null
+              ? Encreption.decreptAES(json['text'].trim())
+              : '',
+          id: json['_id'],
+          roomId: json['roomId'],
+          senderTo: json['senderTo'],
+          createdAt: json['createdAt'],
+          attachLink: json['attachLink'],
+          messageType: msgTypeReturn(json['type']),
+          messageStatus:  iscontain??false
+              ? MessageStatus.not_view
+              : MessageStatus.viewed,
+          isSender: sender);
 }
 
 msgTypeReturn(type) {

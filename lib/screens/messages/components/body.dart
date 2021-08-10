@@ -1,10 +1,11 @@
 import 'package:chat/api.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/provider/app_provider.dart';
+import 'package:chat/screens/messages/components/chat_input_field.dart';
+import 'package:chat/socket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'chat_input_field.dart';
 import 'message.dart';
 
 class Body extends StatefulWidget {
@@ -24,8 +25,22 @@ class _BodyState extends State<Body> {
   int page = 0;
   final paginateScrollController = ScrollController();
   bool? isLast = false;
+  var uid;
+  @override
+  void dispose() {
+    if (widget.roomId != null)
+      Socket().emitlastOPenForRoom(
+          {"id": widget.roomId, "open": false, "senderId": uid});
+    super.dispose();
+  }
+
   @override
   void initState() {
+    uid = Provider.of<AppProvider>(context, listen: false).user!.id;
+    if (widget.roomId != null)
+      Socket().emitlastOPenForRoom(
+          {"id": widget.roomId, "open": true, "senderId": uid});
+    Provider.of<AppProvider>(context, listen: false).chatList.clear();
     getMessages();
     paginateScrollController.addListener(() {
       setState(() {
@@ -46,7 +61,8 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    var messageList = Provider.of<AppProvider>(context).getChatList();
+    var messageList =
+        Provider.of<AppProvider>(context, listen: true).getChatList();
     return Container(
       child: Column(
         children: [
@@ -58,10 +74,8 @@ class _BodyState extends State<Body> {
                 reverse: true,
                 physics: BouncingScrollPhysics(),
                 itemCount: messageList.length,
-                itemBuilder: (ctx, index) => Message(
-                  message: messageList[index],
-                  img: widget.image,
-                ),
+                itemBuilder: (ctx, index) =>
+                    Message(message: messageList[index], img: widget.image),
               ),
             ),
           ),
