@@ -107,8 +107,8 @@ download(String url, type) async {
   if (url.isNotEmpty && type != 'text') {
     final folderName = "Chaty";
     var dir = await getExternalStorageDirectory();
-    final path =
-        Directory("${dir!.path}/$folderName/${type}s/${url.split('/').last}");
+    var p = dir!.path.split('0/').first;
+    final path = Directory("$p/$folderName/${type}s/${url.split('/').last}");
     if (!(await path.exists())) {
       await Dio().download(url, path.path);
     }
