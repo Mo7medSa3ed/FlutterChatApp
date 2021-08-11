@@ -5,6 +5,7 @@ import 'package:chat/provider/app_provider.dart';
 import 'package:chat/screens/chats/components/peobleBody.dart';
 import 'package:chat/screens/messages/message_screen.dart';
 import 'package:chat/screens/profile/profile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -104,7 +105,21 @@ class _ChatsScreenState extends State<ChatsScreen> {
                 },
               ),
             ]
-          : null,
+          : _selectedIndex == 2
+              ? [
+                  Selector<AppProvider, bool>(
+                      selector: (ctx, appProvider) => appProvider.dark,
+                      builder: (context, dark, child) => CupertinoSwitch(
+                            value: dark,
+                            activeColor: kContentColorLightTheme,
+                            trackColor: kContentColorDarkTheme,
+                            onChanged: (v) {
+                              Provider.of<AppProvider>(context, listen: false)
+                                  .changeDark(v);
+                            },
+                          )),
+                ]
+              : null,
     );
   }
 }

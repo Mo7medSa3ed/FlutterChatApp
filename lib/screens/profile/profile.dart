@@ -41,7 +41,9 @@ class ProfileScrean extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
-                        color: Theme.of(context).textTheme.bodyText1!.color!),
+                        color: Provider.of<AppProvider>(context).dark
+                            ? kContentColorDarkTheme
+                            : kContentColorLightTheme),
                   ),
                   Spacer(
                     flex: 1,

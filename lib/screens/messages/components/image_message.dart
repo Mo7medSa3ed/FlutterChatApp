@@ -35,7 +35,7 @@ class ImageMessage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
             child: Text(
               DateFormat('h:mm a')
-                  .format(DateTime.parse(message!.createdAt.toString())),
+                  .format(DateTime.parse(message!.createdAt.toString()).toLocal()),
               style: TextStyle(
                 fontSize: 10,
                 color: message!.isSender

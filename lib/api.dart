@@ -173,10 +173,10 @@ class API {
   changeUserImage(id, img) async {
     try {
       showLoading(context);
-
+  
       new Dio().patch(
         "$baseURL/users/changeImage/$id",
-        data: {img: img},
+        data: {"img": img},
       ).then((res) {
         if ([200, 201].contains(res.statusCode)) {
           final provider = Provider.of<AppProvider>(context, listen: false);

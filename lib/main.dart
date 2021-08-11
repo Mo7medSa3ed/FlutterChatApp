@@ -117,12 +117,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
-      child: MaterialApp(
-        title: 'Chat App',
-        debugShowCheckedModeBanner: false,
-        theme: lightThemeData(context),
-        darkTheme: darkThemeData(context),
-        home: SplashScrean(),
+      child: Selector<AppProvider, bool>(
+        selector: (ctx, appProvider) => appProvider.dark,
+        builder: (context, dark, child) => MaterialApp(
+          title: 'Chat App',
+          debugShowCheckedModeBanner: false,
+          theme: lightThemeData(context),
+          darkTheme: darkThemeData(context),
+          themeMode: dark ? ThemeMode.dark : ThemeMode.light,
+          home: SplashScrean(),
+        ),
       ),
     );
   }

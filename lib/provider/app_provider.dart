@@ -13,6 +13,7 @@ class AppProvider extends ChangeNotifier {
   bool haRoom = false;
   bool search = false;
   bool pressed = false;
+  bool dark = false;
   String? roomId;
 
   changeSearch({val}) {
@@ -28,6 +29,12 @@ class AppProvider extends ChangeNotifier {
   initUser(user) {
     this.user = user;
     setBoolValue('online', user.online);
+    notifyListeners();
+  }
+
+  changeDark(dark) {
+    this.dark = dark;
+    setBoolValue('dark', dark);
     notifyListeners();
   }
 

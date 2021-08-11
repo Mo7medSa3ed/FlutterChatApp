@@ -174,7 +174,7 @@ class _AudioMessageState extends State<AudioMessage> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
           child: Text(
             DateFormat('h:mm a')
-                .format(DateTime.parse(widget.message!.createdAt.toString())),
+                .format(DateTime.parse(widget.message!.createdAt.toString()).toLocal()),
             style: TextStyle(
               fontSize: 10,
               color: widget.message!.isSender

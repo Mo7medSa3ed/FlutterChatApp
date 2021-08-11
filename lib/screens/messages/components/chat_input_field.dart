@@ -193,6 +193,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                             child: TextField(
                               maxLines: 10,
                               minLines: 1,
+                              textDirection: TextDirection.rtl,
                               controller: textController,
                               decoration: InputDecoration(
                                 hintText: "Type message",
@@ -323,12 +324,13 @@ class _ChatInputFieldState extends State<ChatInputField> {
   }
 
   Widget bottomSheet() {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Card(
         margin: const EdgeInsets.all(18.0),
-        color: kContentColorLightTheme,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        color: !isDark ? kContentColorDarkTheme : kContentColorLightTheme,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           child: Column(
@@ -543,9 +545,10 @@ class _ChatInputFieldState extends State<ChatInputField> {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 12,
-              // fontWeight: FontWeight.w100,
-            ),
+                fontSize: 12,
+                color: Theme.of(context).textTheme.bodyText1!.color!
+                // fontWeight: FontWeight.w100,
+                ),
           )
         ],
       ),

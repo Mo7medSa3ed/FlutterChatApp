@@ -2,8 +2,6 @@ import 'package:chat/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
-
 ThemeData lightThemeData(BuildContext context) {
   return ThemeData.light().copyWith(
     brightness: Brightness.light,
@@ -29,9 +27,8 @@ ThemeData lightThemeData(BuildContext context) {
 }
 
 ThemeData darkThemeData(BuildContext context) {
- 
   return ThemeData.dark().copyWith(
-     brightness: Brightness.dark,
+    brightness: Brightness.dark,
     primaryColor: kPrimaryColor,
     scaffoldBackgroundColor: kContentColorLightTheme,
     appBarTheme: appBarTheme,
@@ -53,4 +50,8 @@ ThemeData darkThemeData(BuildContext context) {
   );
 }
 
-final appBarTheme = AppBarTheme(centerTitle: false, elevation: 0 , backgroundColor: kPrimaryColor, );
+final appBarTheme = AppBarTheme(
+  centerTitle: false,
+  elevation: 0,
+  backgroundColor: kPrimaryColor,
+);

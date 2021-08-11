@@ -48,7 +48,10 @@ class ChatCard extends StatelessWidget {
         padding: EdgeInsets.only(left: 16),
         alignment: Alignment.centerLeft,
         color: kErrorColor,
-        child: Icon(Icons.delete),
+        child: Icon(
+          Icons.delete,
+          color: Colors.white,
+        ),
       ),
       direction: DismissDirection.startToEnd,
       child: InkWell(
@@ -101,8 +104,9 @@ class ChatCard extends StatelessWidget {
                           chat.recieverStatus != null
                               ? chat.recieverStatus!
                               : (chat.lastMessage!.text != null
-                                  ? chat.lastMessage!.text
-                                  : chat.lastMessage!.type)??'' ,
+                                      ? chat.lastMessage!.text
+                                      : chat.lastMessage!.type) ??
+                                  '',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -116,7 +120,7 @@ class ChatCard extends StatelessWidget {
                   Opacity(
                       opacity: 0.64,
                       child: Text(DateFormat('h:mm a')
-                          .format(DateTime.parse(chat.updatedAt.toString())))),
+                          .format(DateTime.parse(chat.updatedAt.toString()).toLocal()))),
                   SizedBox(height: chat.msgCount == 0 ? 0 : 5),
                   chat.msgCount == 0
                       ? Container()

@@ -87,6 +87,8 @@ class _SplashScreanState extends State<SplashScrean> {
 
   check() async {
     final prfs = await SharedPreferences.getInstance();
+    Provider.of<AppProvider>(context, listen: false).dark =
+        prfs.getBool('dark') ?? false;
     final userGetter = prfs.get('user');
     User? user = userGetter != null
         ? User.fromJson(jsonDecode(userGetter.toString()))

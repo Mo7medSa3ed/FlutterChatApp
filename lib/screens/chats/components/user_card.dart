@@ -58,15 +58,15 @@ class UserCard extends StatelessWidget {
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
-                    SizedBox(height: 4),
-                    Opacity(
-                      opacity: 0.6,
-                      child: Text(
-                        user.phone ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    // SizedBox(height: 4),
+                    // Opacity(
+                    //   opacity: 0.6,
+                    //   child: Text(
+                    //     user.phone ?? '',
+                    //     maxLines: 1,
+                    //     overflow: TextOverflow.ellipsis,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

@@ -1,7 +1,6 @@
 import 'package:chat/models/ChatMessage.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
+import 'package:intl/intl.dart' as intel;
 import '../../../constants.dart';
 
 class TextMessage extends StatelessWidget {
@@ -36,6 +35,7 @@ class TextMessage extends StatelessWidget {
             children: [
               Text(
                 message!.text ?? '',
+                textDirection: TextDirection.rtl,
                 style: TextStyle(
                   color: message!.isSender
                       ? Colors.white
@@ -48,13 +48,11 @@ class TextMessage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
           child: Text(
-            DateFormat('h:mm a')
-                .format(DateTime.parse(message!.createdAt.toString())),
+            intel.DateFormat('h:mm a').format(
+                DateTime.parse(message!.createdAt.toString()).toLocal()),
             style: TextStyle(
               fontSize: 10,
-              color: message!.isSender
-                  ? Colors.white
-                  : Theme.of(context).textTheme.bodyText1!.color,
+              color: Theme.of(context).textTheme.bodyText1!.color,
             ),
           ),
         ),
