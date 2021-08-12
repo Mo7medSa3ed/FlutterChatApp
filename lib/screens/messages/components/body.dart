@@ -84,6 +84,7 @@ class _BodyState extends State<Body> {
           ),
           ChatInputField(
             senderToId: widget.senderToId,
+            roomId: widget.roomId,
           ),
         ],
       ),
