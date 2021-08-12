@@ -72,7 +72,7 @@ void onBackgroundFetch(String taskId) async {
           options: Options(responseType: ResponseType.json));
       if ([200, 201].contains(res.statusCode)) {
         res.data.forEach((e) async {
-          if ( e['senderId'] != user!.id){
+          if ( e['senderId'] != user.id){
 
           await notificationPlugin.showNotification(res.data.indexOf(e),
               e['senderName'], Encreption.decreptAES(e['text']), e['roomId']);
