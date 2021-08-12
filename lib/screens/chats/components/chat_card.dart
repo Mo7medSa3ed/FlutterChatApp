@@ -40,6 +40,7 @@ class ChatCard extends StatelessWidget {
             confirm: () async {
               Navigator.of(context).pop();
               success = await API(context).deleteChat(chat.id);
+              Navigator.of(context).pop();
             });
 
         return Future.value(success);

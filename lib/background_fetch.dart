@@ -13,7 +13,7 @@ Future<void> initPlatformState() async {
     await BackgroundFetch.configure(
         BackgroundFetchConfig(
           minimumFetchInterval: 1,
-          startOnBoot: true,
+          startOnBoot: false,
           stopOnTerminate: false,
           enableHeadless: true,
           requiresBatteryNotLow: false,
@@ -29,7 +29,7 @@ Future<void> initPlatformState() async {
       delay: 1,
       periodic: true,
       forceAlarmManager: true,
-      startOnBoot: true,
+      startOnBoot: false,
       stopOnTerminate: false,
       enableHeadless: true,
       requiresBatteryNotLow: false,
@@ -65,17 +65,16 @@ void onBackgroundFetch(String taskId) async {
         : null;
     bool online = prfs.getBool('online') ?? false;
 
-    if (online==false) {
+    if (online == false) {
       final dio = new Dio();
       final res = await dio.get(
           'https://chatserver1235.herokuapp.com/messages/${user!.id}',
           options: Options(responseType: ResponseType.json));
       if ([200, 201].contains(res.statusCode)) {
         res.data.forEach((e) async {
-          if ( e['senderId'] != user.id){
-
-          await notificationPlugin.showNotification(res.data.indexOf(e),
-              e['senderName'], Encreption.decreptAES(e['text']), e['roomId']);
+          if (e['senderId'] != user.id) {
+            await notificationPlugin.showNotification(res.data.indexOf(e),
+                e['senderName'], Encreption.decreptAES(e['text']), e['roomId']);
           }
         });
       }
