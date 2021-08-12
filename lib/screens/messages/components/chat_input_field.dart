@@ -35,7 +35,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
   @override
   void initState() {
     textController.addListener(() {
-      setState(() {});
+      if (textController.text.isEmpty || textController.text.length == 1) {
+        setState(() {});
+      }
     });
     super.initState();
   }

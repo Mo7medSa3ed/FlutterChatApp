@@ -122,11 +122,19 @@ class AppProvider extends ChangeNotifier {
         } else {
           roomList![idx].msgCount = roomList![idx].msgCount! + 1;
         }
-        await notificationPlugin.showNotification(
-            chatList.length,
-            roomList![idx].reciverId!.name,
-            chat.text ?? chat.attachLink,
-            chat.roomId);
+        if (roomList![idx].reciverId!.id == user!.id) {
+          await notificationPlugin.showNotification(
+              chatList.length,
+              roomList![idx].userId!.name,
+              chat.text ?? chat.attachLink,
+              chat.roomId);
+        } else {
+          await notificationPlugin.showNotification(
+              chatList.length,
+              roomList![idx].reciverId!.name,
+              chat.text ?? chat.attachLink,
+              chat.roomId);
+        }
       }
     }
 
