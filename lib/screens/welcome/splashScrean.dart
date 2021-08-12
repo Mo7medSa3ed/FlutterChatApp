@@ -26,6 +26,7 @@ class _SplashScreanState extends State<SplashScrean> {
   var subscription;
   @override
   void initState() {
+    changeTheme();
     Connectivity().checkConnectivity().then((value) {
       if (value != ConnectivityResult.none) {
         check();
@@ -85,10 +86,15 @@ class _SplashScreanState extends State<SplashScrean> {
     }
   }
 
-  check() async {
+  changeTheme() async {
     final prfs = await SharedPreferences.getInstance();
     Provider.of<AppProvider>(context, listen: false).dark =
         prfs.getBool('dark') ?? false;
+  }
+
+  check() async {
+    final prfs = await SharedPreferences.getInstance();
+
     final userGetter = prfs.get('user');
     User? user = userGetter != null
         ? User.fromJson(jsonDecode(userGetter.toString()))
