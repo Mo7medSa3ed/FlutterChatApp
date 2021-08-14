@@ -40,7 +40,6 @@ class ChatCard extends StatelessWidget {
             confirm: () async {
               Navigator.of(context).pop();
               success = await API(context).deleteChat(chat.id);
-              Navigator.of(context).pop();
             });
 
         return Future.value(success);
@@ -120,8 +119,9 @@ class ChatCard extends StatelessWidget {
                 children: [
                   Opacity(
                       opacity: 0.64,
-                      child: Text(DateFormat('h:mm a')
-                          .format(DateTime.parse(chat.updatedAt.toString()).toLocal()))),
+                      child: Text(DateFormat('h:mm a').format(
+                          DateTime.parse(chat.updatedAt.toString())
+                              .toLocal()))),
                   SizedBox(height: chat.msgCount == 0 ? 0 : 5),
                   chat.msgCount == 0
                       ? Container()

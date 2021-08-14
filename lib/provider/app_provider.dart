@@ -89,7 +89,7 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  addMsgTochat(ChatMessage chat) async {
+  addMsgTochat(ChatMessage chat, {first = false}) async {
     bool read = false;
     final idx = roomList!.indexWhere((e) => e.id == chat.roomId);
     if (idx != -1) {
@@ -122,18 +122,20 @@ class AppProvider extends ChangeNotifier {
         } else {
           roomList![idx].msgCount = roomList![idx].msgCount! + 1;
         }
-        if (roomList![idx].reciverId!.id == user!.id) {
-          await notificationPlugin.showNotification(
-              chatList.length,
-              roomList![idx].userId!.name,
-              chat.text ?? chat.attachLink,
-              chat.roomId);
-        } else {
-          await notificationPlugin.showNotification(
-              chatList.length,
-              roomList![idx].reciverId!.name,
-              chat.text ?? chat.attachLink,
-              chat.roomId);
+        if (first == false) {
+          if (roomList![idx].reciverId!.id == user!.id) {
+            await notificationPlugin.showNotification(
+                chatList.length,
+                roomList![idx].userId!.name,
+                chat.text ?? chat.attachLink,
+                chat.roomId);
+          } else {
+            await notificationPlugin.showNotification(
+                chatList.length,
+                roomList![idx].reciverId!.name,
+                chat.text ?? chat.attachLink,
+                chat.roomId);
+          }
         }
       }
     }
@@ -144,9 +146,11 @@ class AppProvider extends ChangeNotifier {
   addRoom(Room room) {
     if (roomList!.length > 0) {
       if (roomList!.indexWhere((e) => e.id == room.id) == -1) {
+        room.msgCount = 0;
         roomList!.add(room);
       }
     } else {
+      room.msgCount = 0;
       roomList!.add(room);
     }
     notifyListeners();
@@ -164,7 +168,6 @@ class AppProvider extends ChangeNotifier {
 
   changStatusForMessages(data) async {
     roomList!.firstWhere((e) => e.id == data['id']).open = data['open'];
-    print(data);
     var unredList = [];
     if (chatList.length > 0) {
       if (chatList[0].roomId == data['id']) {

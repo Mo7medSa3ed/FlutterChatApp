@@ -173,7 +173,7 @@ class API {
   changeUserImage(id, img) async {
     try {
       showLoading(context);
-  
+
       new Dio().patch(
         "$baseURL/users/changeImage/$id",
         data: {"img": img},
@@ -271,7 +271,7 @@ class API {
         if (page == 1)
           Provider.of<AppProvider>(context, listen: false).chatList.clear();
         Provider.of<AppProvider>(context, listen: false).initChatList(data);
-        if (data.length < 20) {
+        if (data.length < 10) {
           return true;
         }
         return false;
@@ -293,7 +293,8 @@ class API {
 
       if ([200, 201].contains(res.statusCode)) {
         ChatMessage data = ChatMessage.fromJson(res.data, true);
-        Provider.of<AppProvider>(context, listen: false).addMsgTochat(data);
+        Provider.of<AppProvider>(context, listen: false)
+            .addMsgTochat(data, first: true);
 
         return true;
       } else {
@@ -336,7 +337,6 @@ class API {
           options: Options(responseType: ResponseType.json));
 
       if ([200, 201].contains(res.statusCode)) {
-        print(res.data);
         if (res.data['success']) {
           pro.deleteRoom(id);
           Navigator.of(context).pop();

@@ -22,7 +22,7 @@ class _VideoMessageState extends State<VideoMessage> {
     flickManager = FlickManager(
       autoPlay: false,
       autoInitialize: true,
-      videoPlayerController: VideoPlayerController.network(link),
+      videoPlayerController: VideoPlayerController.network(widget.message!.attachLink??link),
     );
   }
 

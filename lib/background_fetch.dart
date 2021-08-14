@@ -13,7 +13,7 @@ Future<void> initPlatformState() async {
     await BackgroundFetch.configure(
         BackgroundFetchConfig(
           minimumFetchInterval: 1,
-          startOnBoot: false,
+          startOnBoot: true,
           stopOnTerminate: false,
           enableHeadless: true,
           requiresBatteryNotLow: false,
@@ -29,7 +29,7 @@ Future<void> initPlatformState() async {
       delay: 1,
       periodic: true,
       forceAlarmManager: true,
-      startOnBoot: false,
+      startOnBoot: true,
       stopOnTerminate: false,
       enableHeadless: true,
       requiresBatteryNotLow: false,
@@ -66,6 +66,7 @@ void onBackgroundFetch(String taskId) async {
     bool online = prfs.getBool('online') ?? false;
 
     if (online == false) {
+      print("inside service");
       final dio = new Dio();
       final res = await dio.get(
           'https://chatserver1235.herokuapp.com/messages/${user!.id}',

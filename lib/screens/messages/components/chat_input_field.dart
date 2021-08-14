@@ -79,7 +79,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
           Provider.of<AppProvider>(context, listen: false).getChatList();
       if (chatList.length > 0) {
         Socket().emitChangeStatus({
-          'roomId': widget.roomId??chatList[0].roomId,
+          'roomId': widget.roomId ?? chatList[0].roomId,
           'reciever': "${widget.senderToId}",
           'status': 'Recording...'
         });
@@ -95,7 +95,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
         Provider.of<AppProvider>(context, listen: false).getChatList();
     if (chatList.length > 0) {
       Socket().emitChangeStatus({
-        'roomId': widget.roomId??chatList[0].roomId,
+        'roomId': widget.roomId ?? chatList[0].roomId,
         'reciever': "${widget.senderToId}",
         'status': null
       });
@@ -112,7 +112,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
         Provider.of<AppProvider>(context, listen: false).getChatList();
     if (chatList.length > 0) {
       Socket().emitChangeStatus({
-        'roomId': widget.roomId??chatList[0].roomId,
+        'roomId': widget.roomId ?? chatList[0].roomId,
         'reciever': "${widget.senderToId}",
         'status': null
       });
@@ -128,7 +128,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
         Provider.of<AppProvider>(context, listen: false).getChatList();
     if (chatList.length > 0) {
       Socket().emitChangeStatus({
-        'roomId': widget.roomId??chatList[0].roomId,
+        'roomId': widget.roomId ?? chatList[0].roomId,
         'reciever': "${widget.senderToId}",
         'status': 'Recording...'
       });
@@ -158,7 +158,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
       child: SafeArea(
         child: Row(
           children: [
-            textController.text.isNotEmpty
+            textController.text.trim().isNotEmpty
                 ? Container()
                 : InkWell(
                     onTap: () async {
@@ -204,7 +204,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                                 border: InputBorder.none,
                               ),
                               onChanged: (String v) {
-                                if (v.length == 1 || v.length == 0) {
+                                if (v.trim().length == 1 || v.trim().length == 0) {
                                   final chatList = Provider.of<AppProvider>(
                                           context,
                                           listen: false)
@@ -212,10 +212,11 @@ class _ChatInputFieldState extends State<ChatInputField> {
 
                                   if (chatList.length > 0) {
                                     Socket().emitChangeStatus({
-                                      'roomId': widget.roomId??chatList[0].roomId,
+                                      'roomId':
+                                          widget.roomId ?? chatList[0].roomId,
                                       'reciever': "${widget.senderToId}",
                                       'status':
-                                          v.length == 0 ? null : 'typing...'
+                                          v.trim().length == 0 ? null : 'typing...'
                                     });
                                   }
                                 }
@@ -259,7 +260,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                 ),
               ),
             ),
-            (textController.text.isNotEmpty ||
+            (textController.text.trim().isNotEmpty ||
                     status == RecordingStatus.Paused ||
                     status == RecordingStatus.Recording)
                 ? Container(
@@ -284,8 +285,11 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           final chatList =
                               Provider.of<AppProvider>(context, listen: false)
                                   .getChatList();
-                          final rid =
-                              chatList.length > 0 ? widget.roomId??chatList[0].roomId : widget.roomId!=null?widget.roomId : null;
+                          final rid = chatList.length > 0
+                              ? widget.roomId ?? chatList[0].roomId
+                              : widget.roomId != null
+                                  ? widget.roomId
+                                  : null;
 
                           final data = Message(
                               roomId: rid,
@@ -302,7 +306,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                             textController.clear();
                             if (chatList.length > 0) {
                               Socket().emitChangeStatus({
-                                'roomId': widget.roomId??chatList[0].roomId,
+                                'roomId': widget.roomId ?? chatList[0].roomId,
                                 'reciever': "${widget.senderToId}",
                                 'status': null
                               });
@@ -361,8 +365,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         final chatList =
                             Provider.of<AppProvider>(context, listen: false)
                                 .getChatList();
-                        final rid =
-                            chatList.length > 0 ? widget.roomId??chatList[0].roomId : null;
+                        final rid = chatList.length > 0
+                            ? widget.roomId ?? chatList[0].roomId
+                            : null;
 
                         final data = Message(
                             roomId: rid,
@@ -394,8 +399,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         final chatList =
                             Provider.of<AppProvider>(context, listen: false)
                                 .getChatList();
-                        final rid =
-                            chatList.length > 0 ? widget.roomId??chatList[0].roomId : null;
+                        final rid = chatList.length > 0
+                            ? widget.roomId ?? chatList[0].roomId
+                            : null;
 
                         final data = Message(
                             roomId: rid,
@@ -433,8 +439,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           final chatList =
                               Provider.of<AppProvider>(context, listen: false)
                                   .getChatList();
-                          final rid =
-                              chatList.length > 0 ? widget.roomId??chatList[0].roomId : null;
+                          final rid = chatList.length > 0
+                              ? widget.roomId ?? chatList[0].roomId
+                              : null;
 
                           final data = Message(
                               roomId: rid,
@@ -467,8 +474,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         final chatList =
                             Provider.of<AppProvider>(context, listen: false)
                                 .getChatList();
-                        final rid =
-                            chatList.length > 0 ? widget.roomId??chatList[0].roomId : null;
+                        final rid = chatList.length > 0
+                            ? widget.roomId ?? chatList[0].roomId
+                            : null;
 
                         final data = Message(
                             roomId: rid,
@@ -500,8 +508,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         final chatList =
                             Provider.of<AppProvider>(context, listen: false)
                                 .getChatList();
-                        final rid =
-                            chatList.length > 0 ? widget.roomId??chatList[0].roomId : null;
+                        final rid = chatList.length > 0
+                            ? widget.roomId ?? chatList[0].roomId
+                            : null;
 
                         final data = Message(
                             roomId: rid,

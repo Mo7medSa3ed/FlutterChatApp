@@ -21,13 +21,14 @@ class Body extends StatefulWidget {
   _BodyState createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with WidgetsBindingObserver {
   int page = 0;
   final paginateScrollController = ScrollController();
   bool? isLast = false;
   var uid;
   @override
   void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
     if (widget.roomId != null)
       Socket().emitlastOPenForRoom(
           {"id": widget.roomId, "open": false, "senderId": uid});
@@ -35,7 +36,34 @@ class _BodyState extends State<Body> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.detached ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
+      if (!Socket().socket.connected) {
+        Socket().socket.connect();
+      }
+      if (widget.roomId != null)
+        Socket().emitlastOPenForRoom(
+            {"id": widget.roomId, "open": false, "senderId": uid});
+    }
+
+    if (state == AppLifecycleState.resumed) {
+      if (widget.roomId != null) {
+        if (!Socket().socket.connected) {
+          Socket().socket.connect();
+        }
+        Socket().emitlastOPenForRoom(
+            {"id": widget.roomId, "open": true, "senderId": uid});
+      }
+    }
+  }
+
+  @override
   void initState() {
+    WidgetsBinding.instance!.addObserver(this);
     uid = Provider.of<AppProvider>(context, listen: false).user!.id;
     if (widget.roomId != null)
       Socket().emitlastOPenForRoom(

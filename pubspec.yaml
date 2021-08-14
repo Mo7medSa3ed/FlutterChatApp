@@ -30,6 +30,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   dio:
+  visibility_detector:  
   shared_preferences:
   provider:
   cool_alert:
@@ -54,6 +55,7 @@ dependencies:
   socket_io_client: ^2.0.0-beta.4-nullsafety.0
   google_fonts: ^2.0.0
   rxdart:
+  contacts_service:
   flutter_local_notifications: ^8.0.0
 
 dev_dependencies:

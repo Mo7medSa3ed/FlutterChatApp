@@ -82,7 +82,6 @@ class _SplashScreanState extends State<SplashScrean> {
     if (provider.roomList == null) {
       final id = provider.user?.id;
       await API(context).getAllChats(id);
-      setState(() {});
     }
   }
 

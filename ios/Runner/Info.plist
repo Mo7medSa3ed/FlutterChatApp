@@ -11,6 +11,8 @@
     <array>
         <string>remote-notification</string>
     </array>
+	<key>NSContactsUsageDescription</key>  
+<string>This app requires contacts access to function properly.</string>  
 <key>NSMicrophoneUsageDescription</key>
 <string>Can We Use Your Microphone Please</string>
 	<key>CFBundleDevelopmentRegion</key>

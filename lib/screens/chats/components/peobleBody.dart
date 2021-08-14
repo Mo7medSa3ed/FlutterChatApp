@@ -6,6 +6,7 @@ import 'package:chat/screens/chats/components/user_card.dart';
 import 'package:chat/screens/messages/message_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 class PeopleBody extends StatefulWidget {
   @override
@@ -16,13 +17,30 @@ class _PeopleBodyState extends State<PeopleBody> {
   List<User>? users = [];
   bool isFirst = true;
   final searchControoler = TextEditingController(text: '');
+  List contactsNumbers = [];
   @override
   void initState() {
+    getContacts();
     super.initState();
+  }
+
+  getContacts() async {
+    final contacts = await ContactsService.getContacts(withThumbnails: false);
+    contacts.forEach((e) {
+      if (e.phones != null)
+        e.phones!.toSet().forEach((v) {
+          contactsNumbers.add(v.value!.replaceAll("+2", ""));
+        });
+    });
   }
 
   search(query) async {
     users = await API(context).searchPeople(query);
+    final res =
+        (users ?? []).where((e) => contactsNumbers.contains(e.phone)).toList();
+    users!
+      ..clear()
+      ..addAll(res);
     isFirst = false;
   }
 
@@ -44,7 +62,7 @@ class _PeopleBodyState extends State<PeopleBody> {
               controller: searchControoler,
               maxLength: 20,
               onChanged: (String val) async {
-                if (val.trim().length > 0) {
+                if (val.trim().length ==11) {
                   await search(val.trim().toLowerCase());
                 } else {
                   users = [];
@@ -79,7 +97,7 @@ class _PeopleBodyState extends State<PeopleBody> {
                           return;
                         }
                       });
-                     
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
