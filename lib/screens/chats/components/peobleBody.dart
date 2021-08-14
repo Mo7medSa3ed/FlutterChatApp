@@ -121,7 +121,7 @@ class _PeopleBodyState extends State<PeopleBody> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: kDefaultPadding * 3),
                           child: Text(
-                            "Hi you can search for user with name or phone to chat with them.",
+                            "Hi you can search for user with phone to chat with them.",
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 18, letterSpacing: 2),
                           ),
