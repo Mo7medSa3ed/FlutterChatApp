@@ -263,18 +263,19 @@ class API {
           if (e['attachLink'] != null && e['type'] != 'text')
             await download(e['attachLink'], e['type']);
           var contain = await isContain(e['_id']);
-          print(contain);
           data.add(ChatMessage.fromJson(e, e['senderTo'] != uid,
               iscontain: contain));
         }
 
-        if (page == 1)
+        if (page == 1) {
           Provider.of<AppProvider>(context, listen: false).chatList.clear();
-        Provider.of<AppProvider>(context, listen: false).initChatList(data);
-        if (data.length < 10) {
-          return true;
+          Provider.of<AppProvider>(context, listen: false).initChatList(data);
+
+          if (data.length < 10) {
+            return true;
+          }
+          return false;
         }
-        return false;
       } else {
         return null;
       }
@@ -313,7 +314,6 @@ class API {
 
       final res = await dio.delete('$baseURL/users/$uid',
           options: Options(responseType: ResponseType.json));
-
       if ([200, 201].contains(res.statusCode)) {
         if (res.data['success']) {
           clearPrfs();
@@ -329,13 +329,14 @@ class API {
 
   Future<dynamic>? deleteChat(id) async {
     final pro = Provider.of<AppProvider>(context, listen: false);
+    final uid = pro.user!.id;
     showLoading(context);
     try {
       final dio = new Dio();
 
-      final res = await dio.delete('$baseURL/rooms/$id',
+      final res = await dio.delete('$baseURL/rooms/$id/$uid',
           options: Options(responseType: ResponseType.json));
-
+      print(res.data);
       if ([200, 201].contains(res.statusCode)) {
         if (res.data['success']) {
           pro.deleteRoom(id);
