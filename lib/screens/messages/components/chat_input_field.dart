@@ -85,7 +85,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
         });
       }
     } else {
-      print("you want to allow mic permission");
+      // print("you want to allow mic permission");
     }
   }
 
@@ -356,6 +356,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   ),
                   iconCreation(Icons.camera_alt, Colors.pink, "Camera",
                       () async {
+                    // ignore: invalid_use_of_visible_for_testing_member
                     final result = await ImagePicker.platform
                         .pickImage(source: ImageSource.camera);
                     if (result != null) {
@@ -389,12 +390,13 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   ),
                   iconCreation(Icons.insert_photo, Colors.purple, "Gallery",
                       () async {
+                    // ignore: invalid_use_of_visible_for_testing_member
                     final result = await ImagePicker.platform
                         .pickImage(source: ImageSource.gallery);
                     if (result != null) {
                       showLoading(context);
                       final res = await Cloud.upload(result);
-                      print(res);
+                      // print(res);
                       if (res != null) {
                         final chatList =
                             Provider.of<AppProvider>(context, listen: false)
@@ -465,6 +467,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   iconCreation(
                       Icons.smart_display, Colors.teal, "Gallery\nVideo",
                       () async {
+                    // ignore: invalid_use_of_visible_for_testing_member
                     final result = await ImagePicker.platform
                         .pickVideo(source: ImageSource.gallery);
                     if (result != null) {
@@ -499,6 +502,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   iconCreation(
                       Icons.smart_display, Colors.teal, "Camera\nVideo",
                       () async {
+                    // ignore: invalid_use_of_visible_for_testing_member
                     final result = await ImagePicker.platform
                         .pickVideo(source: ImageSource.camera);
                     if (result != null) {

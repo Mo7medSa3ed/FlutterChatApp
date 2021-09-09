@@ -15,7 +15,7 @@ void main() async {
   if (!Socket().socket.connected) {
     Socket().socket.connect();
   }
-
+  print(Socket().socket.connected);
   runApp(ChangeNotifierProvider<AppProvider>(
       create: (_) => AppProvider(), builder: (ctx, w) => MyApp()));
 

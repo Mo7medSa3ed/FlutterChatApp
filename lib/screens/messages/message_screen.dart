@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'components/body.dart';
 
+// ignore: must_be_immutable
 class MessagesScreen extends StatelessWidget {
   User chatUser;
   final roomId;

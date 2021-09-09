@@ -39,7 +39,7 @@ Future<void> initPlatformState() async {
       requiredNetworkType: NetworkType.ANY,
     ));
   } catch (e) {
-    print("[BackgroundFetch] configure ERROR: $e");
+    // print("[BackgroundFetch] configure ERROR: $e");
   }
 }
 
@@ -47,12 +47,12 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
   var taskId = task.taskId;
   var timeout = task.timeout;
   if (timeout) {
-    print("[BackgroundFetch] Headless task timed-out: $taskId");
+    // print("[BackgroundFetch] Headless task timed-out: $taskId");
     BackgroundFetch.finish(taskId);
     return;
   }
   onBackgroundFetch(taskId);
-  print("[BackgroundFetch] Headless event received2: $taskId");
+  // print("[BackgroundFetch] Headless event received2: $taskId");
   BackgroundFetch.finish(taskId);
 }
 
@@ -66,7 +66,7 @@ void onBackgroundFetch(String taskId) async {
     bool online = prfs.getBool('online') ?? false;
 
     if (online == false) {
-      print("inside service");
+      // print("inside service");
       final dio = new Dio();
       final res = await dio.get(
           'https://chatserver1235.herokuapp.com/messages/${user!.id}',
@@ -118,6 +118,6 @@ void onBackgroundFetch(String taskId) async {
 
 /// This event fires shortly before your task is about to timeout.  You must finish any outstanding work and call BackgroundFetch.finish(taskId).
 void onBackgroundFetchTimeout(String taskId) {
-  print("[BackgroundFetch] TIMEOUT: $taskId");
+  // print("[BackgroundFetch] TIMEOUT: $taskId");
   BackgroundFetch.finish(taskId);
 }

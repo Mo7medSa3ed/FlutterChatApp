@@ -19,7 +19,7 @@ const img =
     "https://www.clipartkey.com/mpngs/m/301-3011907_profile-image-placeholder-circle-png.png";
 
 goTo(context, screan) {
-  print("Go to second screan");
+  // print("Go to second screan");
   return Navigator.of(context).push(MaterialPageRoute(builder: (_) => screan));
 }
 

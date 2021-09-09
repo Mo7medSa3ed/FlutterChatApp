@@ -155,9 +155,9 @@ class _AudioMessageState extends State<AudioMessage> {
                             SizedBox(
                               width: 8,
                             ),
-                            Text(getTimeString((timeProgress / 1000).toInt())),
+                            Text(getTimeString(timeProgress ~/ 1000)),
                             Spacer(),
-                            Text(getTimeString((audioDuration / 1000).toInt())),
+                            Text(getTimeString(audioDuration ~/ 1000)),
                             SizedBox(
                               width: 8,
                             ),

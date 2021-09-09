@@ -31,7 +31,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
   onNotificationInlowerVersions(ReceivedNotification receivedNotification) {}
 
   Future onNotificationClick(String payload) async {
-    print(payload);
+    // print(payload);
     final id = payload.split('/').first;
     final pro = Provider.of<AppProvider>(context, listen: false);
     final idx = pro.roomList!.indexWhere((e) => e.id.toString() == id);

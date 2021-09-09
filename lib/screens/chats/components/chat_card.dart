@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../../constants.dart';
 
+// ignore: must_be_immutable
 class ChatCard extends StatelessWidget {
   ChatCard({
     Key? key,
