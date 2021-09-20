@@ -1,6 +1,5 @@
 import 'package:chat/constants.dart';
 import 'package:chat/screens/signinOrSignUp/signin_or_signup_screen.dart';
-import 'package:chat/socket.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {

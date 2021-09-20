@@ -16,8 +16,12 @@ void main() async {
     Socket().socket.connect();
   }
   print(Socket().socket.connected);
-  runApp(ChangeNotifierProvider<AppProvider>(
-      create: (_) => AppProvider(), builder: (ctx, w) => MyApp()));
+  runApp(
+    ChangeNotifierProvider<AppProvider>(
+      create: (_) => AppProvider(),
+      builder: (ctx, w) => MyApp(),
+    ),
+  );
 
   await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
