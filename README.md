@@ -1,39 +1,25 @@
-# Chat/Messaging App Light and Dark Theme - Flutter UI
 
-## [Watch it on YouTube](https://youtu.be/uiJF-ShOLyo)
+# Chat/Messaging App Light and Dark Theme
 
-## [Complete Source Code (Patreon only)](https://bit.ly/3n5mdwS)
+A messaging app is a chat application or platform that enables users to instant message and connect with each other through their mobile devices. Think Facebook Messenger, WhatsApp, WeChat, or Slack (just to name a few). 
+<br/>
 
-**Packages we are using:**
 
-- goole_fonts: [link](https://pub.dev/packages/google_fonts)
+## Screenshots
 
-Today we gonna build messing/chat app #ui using #flutter that runs both Android and iOS devices also has a dark and light theme. We create in total 4 screens all of that support both Dark Theme and Light Theme. At first, we design a welcome screen that contains an image with a tag line also has a skip button. Once the user press, its transfers to the Sign-in or Sign-up screen. The last two screens are the main screen, Chats screens it shows the list of people you are chated with. At the end message screen which support text message, audio message, and video messages.
+![App Screenshot](https://github.com/abuanwar072/Chat-Messaging-App-Light-and-Dark-Theme/raw/master/ui_kit.gif)
+![App Screenshot](https://res.cloudinary.com/de6wqnjl3/image/upload/v1659141859/My%20app%20sceanshots/chat%20app/ui_dyuot9.png)
+![App Screenshot](https://res.cloudinary.com/de6wqnjl3/image/upload/v1659141843/My%20app%20sceanshots/chat%20app/chat_kit_zat4sd.png)
 
-**Complete UI Contains:**
 
-► Splash Screen
-► Welcome Screen
-► Sign in & Sign up
-► Phone Validation (OTP)
-► Forget Password
-► Change Password
-► Chats Screen
-► Search Chats
-► Message Screen
-► Audio Call
-► Video Call
-► Contacts
-► Search Contacts
-► Call History
-► Search on Call history
-► Profile Screen
-► Edit Profile
+This project is a starting point for a Flutter application.
 
-### Chat/Messaging App Light and Dark Theme Final UI
+A few resources to get you started if this is your first Flutter project:
 
-![Preview](/gif.gif)
-![Preview](/ui_kit.gif)
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-![App UI](/ui.png)
-![App UI](/chat_kit.png)
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
+
